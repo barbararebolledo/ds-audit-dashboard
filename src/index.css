@@ -1,0 +1,32 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --color-fail: #b91c1c;
+  --color-partial: #b45309;
+  --color-pass: #166534;
+  --color-accent: #1e3a5f;
+  --color-muted: #737373;
+  --color-line: #e5e5e5;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #171717;
+  background: #fafafa;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Static UI: no transitions on interactive elements */
+a,
+button {
+  transition: none;
+}

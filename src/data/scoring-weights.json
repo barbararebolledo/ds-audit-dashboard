@@ -1,0 +1,13 @@
+{
+  "$comment": "Cluster weights for display — from ds-ai-poc config/scoring-weights.json",
+  "version": "2.1",
+  "clusters": {
+    "0_prerequisites": { "weight": 0.05 },
+    "1_token_and_variable_system": { "weight": 0.25 },
+    "2_component_quality": { "weight": 0.15 },
+    "3_documentation_and_intent": { "weight": 0.25 },
+    "4_design_quality_baseline": { "weight": 0.10 },
+    "5_governance_and_ecosystem": { "weight": 0.08 },
+    "6_design_to_code_parity": { "weight": 0.12 }
+  }
+}
