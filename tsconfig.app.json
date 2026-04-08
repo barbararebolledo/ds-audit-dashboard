@@ -17,6 +17,12 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
+    /* Paths */
+    "baseUrl": ".",
+    "paths": {
+      "@audit/*": ["../ds-ai-audit/*"]
+    },
+
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
