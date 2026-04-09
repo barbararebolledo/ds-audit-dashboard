@@ -136,8 +136,7 @@ export default function ClusterDetail({ system, dimensionRef }: {
                 <div className="flex items-start gap-3">
                   <SeverityDot severity={f.severity} />
                   <div className="flex-1">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-[11px] uppercase tracking-widest font-mono" style={{ opacity: 0.6 }}>{f.id}</span>
+                    <div className="flex items-center justify-end mb-2">
                       <SeverityBadge severity={f.severity} />
                     </div>
                     <p className="text-[14px] font-medium m-0 mb-2">{f.summary}</p>
@@ -159,7 +158,6 @@ export default function ClusterDetail({ system, dimensionRef }: {
               <div key={item.id} className="p-6 flex items-start justify-between" style={{ backgroundColor: '#161616', borderRadius: '24px' }}>
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
-                    <span className="text-[11px] uppercase tracking-wider font-mono" style={{ opacity: 0.5 }}>{item.id}</span>
                     <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded" style={{ border: '1px solid rgba(245, 233, 200, 0.15)', opacity: 0.6 }}>
                       {item.ownership} · {item.effort_estimate}
                     </span>

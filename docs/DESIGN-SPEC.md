@@ -1,282 +1,316 @@
-# Audit Dashboard — Visual Redesign Spec
+# DESIGN-SPEC.md
+# ds-audit-dashboard -- Design Specification
 
-## Context
-
-This spec is for Claude Code working in the `ds-audit-dashboard` repo (Vite + React + Tailwind 4).
-The dashboard displays AI-readiness audit results for design systems.
-The current code is functional and structurally sound. This redesign addresses visual design only.
-
-Run `npm run dev` to preview changes live.
+Last updated: 2026-04-09
+Status: Active -- reflects confirmed decisions from ADR 011 session
+Affects: all pages, component patterns, layout structure
 
 ---
 
-## Design principles (governing)
+## Design tokens
 
-1. **Assist with judgement, not just information** — hierarchy must guide the eye to what matters most
-2. **Be a companion** — calm, not clinical
-3. **Calm by default** — reduce visual noise, let whitespace do the work
-4. **Prove intelligence without explanation** — show the right thing at the right level, no need for labels that say "this is important"
-5. **Embed growth quietly** — remediation should feel like a path forward, not a list of failures
+All values below are the source of truth for implementation. Do not invent new values.
 
-## Four information levels
+### Colour
 
-Each screen should support progressive disclosure:
-- **Glance (5 sec):** readiness verdict + overall score. One sentence.
-- **Scan (30 sec):** cluster scores, top blockers. Pattern recognition.
-- **Diagnose (5 min):** dimension-level detail, findings, evidence.
-- **Remediate (working session):** actionable roadmap with effort/ownership.
+| Token | Value | Usage |
+|---|---|---|
+| background | #0B0B0B | Page background |
+| surface | #111111 | Card surfaces, panels |
+| surface-raised | #161616 | Table surfaces, narrative cards |
+| text-primary | #F5E9C8 | Headings, primary content |
+| text-muted | rgba(245, 233, 200, 0.5) | Descriptions, secondary content |
+| border-default | rgba(245, 233, 200, 0.15) | Card borders, panel edges |
+| border-subtle | rgba(245, 233, 200, 0.05) | Table row separators |
+| border-medium | rgba(245, 233, 200, 0.1) | Table header border |
+| severity-blocker | #FF6B6B | Blocker severity |
+| severity-warning | #F5A623 | Warning severity |
+| severity-pass | #4ADE80 | Pass and note severity |
+| severity-null | #888888 | Unassessed/null severity |
+
+### Typography
+
+| Token | Value |
+|---|---|
+| page-title | clamp(2rem, 4vw, 3rem), font-weight 500, tracking tight |
+| cluster-title | 44px, font-weight 500, tracking tight, colour white |
+| score-large | 48px, font-weight 500, leading none, tracking tight |
+| body | 15px, line-height relaxed |
+| body-small | 14px, font-weight 500 |
+| caption | 13px, opacity 0.5 |
+| label-caps | 11px, uppercase, tracking 0.08em, font-weight 500, opacity 0.6 |
+| mono-id | 11px, uppercase, monospace, tracking widest, opacity 0.6 |
+
+### Shape
+
+| Token | Value |
+|---|---|
+| radius-card | 32px |
+| radius-surface | 24px |
+| radius-badge | fully rounded (capsule) |
+
+### Spacing
+
+Padding inside cards and panels: 32-40px (p-8 to p-10).
+Table cell padding: 16px (p-4).
+Gap between stacked cards: 16px.
+Section spacing: 32px (mb-8).
 
 ---
 
-## Visual reference
+## Shared components
 
-The reference design (a museum analytics onboarding dashboard) establishes these characteristics.
-Translate them into the audit context — do not copy the museum content or layout literally.
+### LabelCaps
 
-### From the reference, extract these visual qualities:
+Section headers above cards, tables, and panels. 11px uppercase, tracking 0.08em, font-weight medium, 60% opacity, colour inherited (#F5E9C8). No margin by default. Used for labels like "DIMENSIONS", "FINDINGS (4)", "CLUSTER 3", "TEAM PARAMETERS".
 
-1. **Card treatment:** Large border-radius (28–32px), generous padding (32–40px), no visible borders on white cards, subtle box-shadow (`0 8px 32px rgba(0,0,0,0.04)`) instead
-2. **Hero block:** Full-width, gradient background (deep colour), white text, large type for the headline (36–48px), supporting text at 14px. The hero carries the single most important message.
-3. **Step/section cards:** White background, same large radius, content-first layout with a small coloured label at the top (11px uppercase, accent colour), title at 20–24px, description at 14px in muted grey
-4. **Grid layout:** 12-column grid with 24px gap, cards spanning columns. NOT single-column — use the grid to create visual rhythm
-5. **Background:** Light warm grey (#F2F2F6 or similar), not pure white
-6. **Typography:** System sans-serif stack, tight letter-spacing on headings (-0.02em), 11px uppercase labels with 0.05em tracking for metadata
-7. **Action affordances:** Circular buttons (56px) with icon, dark fill, placed bottom-right of cards
-8. **Overall feel:** Spacious, confident, slightly editorial. Not a dense data table.
+### SeverityDot
+
+Small filled circle. Default 10px, 8px in dimension table rows. Colour matches severity. Blocker dots get box-shadow: 0 0 8px in severity colour. Other severities have no glow. Shrink-0.
+
+### SeverityBadge
+
+Pill-shaped (fully rounded). Padding: 12px horizontal, 4px vertical. Inline-flex, items centred, 6px gap.
+
+Contents: 6px filled circle (dot) with box-shadow 0 0 6px in severity colour, then severity label text.
+
+Text: 11px uppercase, medium weight, wide tracking. Colour matches severity.
+
+Background: severity colour at ~8% opacity (hex + "15").
+Border: 1px solid, severity colour at ~25% opacity (hex + "40").
+
+Colour mapping: BLOCKER = #FF6B6B, WARNING = #F5A623, NOTE = #4ADE80, PASS = #4ADE80.
+
+### Breadcrumbs
+
+"Overview / Cluster Name" format. Muted text. "Overview" is a link, current page is plain text.
 
 ---
 
-## Changes to make
+## Page: Cluster drill-down
 
-### 1. Global layout and background
+**Pattern:** Master-detail.
+**Decision source:** ADR 011, D2.
+**Interaction model:** Option B -- single-select row with chevron for detail navigation.
 
-**Current:** `bg-[#fafafa]`, single column, `max-w-[960px]`, `px-6 py-10`
-**Target:** `bg-[#F2F2F6]`, 12-column grid available, `max-w-[1200px]`, `px-10 py-10`
+### Layout
 
-- Change body/root background to `#F2F2F6`
-- Increase max-width to 1200px
-- The Overview screen uses the grid; drill-down screens (cluster, dimension) stay single-column at max-w-[800px]
-- Increase horizontal padding to 40px
+Two panels side by side below the page header. Proportions match the overview page: dimensions table takes the width of the "Overall System Readiness" card (~60-65%), findings panel takes the width of the "Top Critical Blockers" card (~35-40%).
 
-### 2. Card system
+Both panels have a fixed height filling the remaining viewport below the header. Both scroll independently.
 
-**Current:** No cards. Sections separated by `border-b`, `divide-y`, and spacing.
-**Target:** Content lives in cards with large radius and subtle shadow.
+### Page header
 
-Create a reusable card style:
-```css
-.audit-card {
-  background: #FFFFFF;
-  border-radius: 28px;
-  padding: 36px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
-}
+- Breadcrumb: "Overview / [Cluster Name]"
+- LabelCaps: "CLUSTER [N]"
+- Title: cluster name, cluster-title size, colour white
+- Score: top-right, score-large size, colour mapped to severity range (under 50% blocker, under 75% warning, 75%+ pass)
+- LabelCaps "Cluster Score" below the score number
+- Narrative card: full-width, surface-raised background, radius-surface, 32px padding. Body text at 80% opacity.
+
+### Left panel -- Dimensions table
+
+LabelCaps "DIMENSIONS" above the table.
+
+Table container: surface-raised background (#161616), radius-surface (24px), overflow hidden.
+
+**Table header:** Row with border-bottom border-medium. Columns in label-caps style at 50% opacity.
+- Dimension (left-aligned)
+- Score (centred, ~80px)
+- Severity (centred, ~112px)
+- Chevron column (right-aligned, ~64px, no header text)
+
+**Table body rows:** border-bottom border-subtle. Padding 16px all cells.
+- Dimension cell: SeverityDot (8px) + 12px gap + dimension name in body-small
+- Score cell: centred, body-small, colour matches severity
+- Severity cell: centred, SeverityBadge
+- Chevron cell: chevron-right SVG, 14px, 30% opacity. Secondary action: navigates to dimension detail page
+
+**Row interaction:**
+- Clicking the row selects it and shows its findings in the right panel
+- Selected row gets a subtle highlight (implementation to refine in Cursor -- options include left border accent, background shift, or opacity change)
+- Chevron is the navigation action to the full dimension detail page
+- These are two separate touch targets: row = select, chevron = navigate
+
+**Row ordering:**
+- Grouped by tier. Tier 1 (scored 0-4, structural measurable dimensions) first. Tier 2 (scored 0-2, heuristic quality dimensions) second.
+- Tier separator between them. Design treatment TBD -- to be refined in Cursor. Must communicate "structural" vs "heuristic" without splitting the table into two disconnected pieces.
+- Within each tier: dimensions with findings sort to the top, then by severity (blocker first, then warning, then note, then pass), then alphabetical.
+- If more than 3 dimensions in a tier have no findings, they collapse behind a "Show all" text button.
+
+**Default state:** First dimension with findings is pre-selected.
+
+### Right panel -- Findings
+
+LabelCaps "FINDINGS" (with count, e.g. "FINDINGS (3)") above the panel.
+
+Panel header shows: selected dimension name, its score, and findings count.
+
+Finding cards stack vertically with 16px gap. Card style matches Top Critical Blockers from overview: surface-raised background, radius-surface, border border-subtle, 24px padding.
+
+Each card:
+- Top row: SeverityDot + finding ID in mono-id style + SeverityBadge right-aligned
+- Summary: body-small, 8px below ID row
+- Description: caption style, 8px below summary. Truncated at 200 characters with ellipsis.
+
+**Empty state:** When a dimension with no findings is selected, show the dimension's narrative text in caption style. No cards.
+
+**Finding IDs:** Internal IDs (CDC-001, etc.) are visible in this panel. Per ADR 011 D1, these should eventually be replaced with sequential numbers for the client-facing view. For now, keep internal IDs.
+
+---
+
+## Page: Impact Calculator
+
+**Decision source:** ADR 011, C1-C5. Impact model: Thinking-track/Frameworks/impact-model.md.
+**Status:** Complete redesign from previous version.
+
+### Purpose
+
+The client enters their team context. The page projects the annual cost of unresolved design system gaps across four impact categories, using formulas driven by audit scores and client inputs. All calculations update in real time.
+
+### Layout
+
+To be refined in Cursor. Two candidate layouts:
+- (a) Input panel as a left sidebar, results on the right
+- (b) Inputs at the top (compact/collapsible), full-width results below
+
+### Client input panel
+
+Inputs grouped into three sections:
+
+**Your team:**
+- Designers: number input, range 1-500, default 5
+- Engineers: number input, range 1-500, default 8
+
+**Your workflow:**
+- Components used per sprint per designer: slider, 5-50, default 20
+- Minutes per correction cycle: slider, 3-30, default 10
+- Sprints per year: number input, default 26
+- Theme changes per year: slider, 0-6, default 2
+- Releases per year: number input, default 12
+
+**Your costs:**
+- Blended hourly rate: number input, range 30-300, default 80, currency EUR
+
+Control type rule: sliders for narrow ranges where approximate is fine. Number inputs (text field with optional stepper) for wide ranges or where the client knows their exact number.
+
+### Total projected savings
+
+Hero section. Large number showing total annual projected savings in euros. Below it:
+- Progress bar: current audit score vs target (85%+)
+- Status label: "Projected Estimate" (replaces the previous "High Confidence Estimate")
+- "View Remediation Plan" action button
+
+### Four impact category cards
+
+Arranged in a row (grid or flex). Each card: surface background (#111111), radius-card (32px), border border-default.
+
+**Card 1 -- Correction Cycles (speed)**
+- Icon: rotation/refresh icon, colour #FF6B6B
+- Projected annual cost (large number)
+- Title: "Correction Cycles"
+- Description: editorial value framing from Cluster 3, or default: "Projected hours spent on human corrections when AI agents lack component intent documentation."
+- Optionally: top related blocker from audit
+
+**Card 2 -- Theme Rework (cost)**
+- Icon: grid/layout icon, colour #FFB84C
+- Projected annual cost (large number)
+- Title: "Theme Rework"
+- Description: editorial value framing from Cluster 1, or default: "Projected cost of manual updates when token architecture lacks semantic layers."
+- Optionally: top related blocker
+
+**Card 3 -- Parity Defects (quality)**
+- Icon: code brackets icon, colour #4C8BFF
+- Projected annual cost (large number)
+- Title: "Parity Defects"
+- Description: editorial value framing from Cluster 6, or default: "Projected cost of bugs from undocumented Figma-to-code mismatches surfacing in QA or production."
+- Optionally: top related blocker
+
+**Card 4 -- Token Efficiency (sustainability)**
+- Icon: leaf or efficiency icon, colour TBD (suggest a green or teal distinct from pass green)
+- **No cost number.** Instead, show a qualitative label: "Emerging Category" or "Pending Validation"
+- Title: "Token Efficiency"
+- Description: "Token consumption is an operational and environmental cost -- compute, energy, water for cooling. This category becomes quantifiable after the token efficiency experiment."
+- Visual treatment: intentionally staged. Present and accounted for, not broken or empty. Distinct from the three quantified cards -- consider reduced opacity, a dashed border, or a "coming soon" badge. Must not look like an error.
+
+### Formulas
+
+All formulas run client-side in pure functions. Source of truth for formulas: impact-model.md. Key formulas:
+
+**Correction cycles:**
 ```
+correction_minutes_per_sprint =
+  components_used_per_sprint × designers × undocumented_rate × minutes_per_correction
 
-Dark mode consideration: not required for v1, but use CSS custom properties so it can be added later.
+annual_correction_hours =
+  correction_minutes_per_sprint × sprints_per_year / 60
 
-**Where cards apply:**
-- Each cluster block on the Overview → individual card
-- Top blockers section → one card containing the list
-- Remediation summary on Overview → one card
-- Cluster detail header → card
-- Dimension detail header → card
-
-**Where cards do NOT apply:**
-- The hero/verdict block (has its own treatment)
-- Tables within cards (they inherit the card background)
-- Breadcrumbs (float above cards)
-
-### 3. Hero / verdict block (Overview)
-
-**Current:** A header with date, readiness text at 20px, score at 32px, and a bar.
-**Target:** Full-width hero card with deep accent background.
-
+annual_correction_cost = annual_correction_hours × hourly_rate
 ```
-Background: linear-gradient(135deg, #1e3a5f 0%, #0f1f33 100%)
-Text: white
-Border-radius: 28px
-Padding: 40px
-Min-height: 280px (let content dictate, do not force)
+`undocumented_rate` derived from dimension 3.1 score. `designers` is the designer count input.
+
+**Theme rework:**
 ```
+manual_updates_per_theme_change =
+  flat_token_count × avg_components_using_each_token
 
-Layout (flexbox, space-between):
-- **Left side:**
-  - Small label: audit date, 11px uppercase, white at 80% opacity
-  - Readiness verdict: 32–36px, font-weight 600, letter-spacing -0.02em
-    - Use the full READINESS_COPY text, e.g. "Not ready for AI-assisted workflows"
-  - One-line summary: 14px, white at 90% opacity, max-width 440px
-    - Use the `phase_readiness_detail.conditions_for_advancement[0]` as context,
-      or write a static sentence: "10 blocking dimensions across documentation, motion, and parity."
-- **Right side:**
-  - Small label: "Overall score", 11px uppercase, white at 80% opacity
-  - Score: 56–72px, font-weight 600, tabular-nums
-  - The horizontal bar sits below the score, full width of the right column
-
-Remove the current `ClusterScoreBar` from the hero — the score number is sufficient at glance level. If you keep a bar, make it 3px tall and white at 30% opacity for the track, white at 90% for the fill.
-
-### 4. Cluster section (Overview)
-
-**Current:** Vertical stack of full-width button blocks.
-**Target:** Grid of cards, 2 or 3 columns.
-
-Use `grid-template-columns: repeat(auto-fill, minmax(340px, 1fr))` with `gap: 20px`.
-
-Each cluster card:
-- `.audit-card` base
-- Top: cluster name at 17px semibold + score at 17px semibold tabular-nums, on the same line (flexbox, space-between)
-- Below: horizontal score bar, 3px tall, full card width, semantic colour
-- Below bar: `cluster_summary` text at 14px, colour `#666666`, max 3 lines
-- Bottom: findings/blockers count at 12px, uppercase, muted
-- Entire card is clickable (keep the button wrapper)
-- The prerequisite caution message stays, styled as a small amber pill/badge at the bottom of affected cards
-
-### 5. Top blockers (Overview)
-
-**Current:** `divide-y` list with severity badge + summary + cluster/dimension text.
-**Target:** Single card containing the list. Remove horizontal dividers. Use 24px vertical gap between items instead.
-
-Each blocker item:
-- Severity as a small coloured dot (8px circle, not text) — red for blocker
-- Summary at 15px semibold
-- Cluster · Dimension at 13px muted, below
-- Entire item clickable
-
-### 6. Score bars
-
-**Current:** `h-2` (8px), `max-w-[200px]` on dimension bars, `bg-neutral-200` track.
-**Target:** `h-[3px]`, no max-width constraint (fill available space), track colour `#E8E8EC`.
-
-Semantic fill colours stay:
-- `--color-fail: #b91c1c` (scores 0–1)
-- `--color-partial: #b45309` (score 2)
-- `--color-pass: #166534` (scores 3–4)
-
-Add `border-radius: 2px` to both track and fill for a softer look.
-
-### 7. Typography adjustments
-
-**Current type scale is mostly correct. Adjustments:**
-
-- Section headings (CLUSTERS, TOP BLOCKERS, etc.): keep 11px uppercase tracking-wide, but change colour from `text-neutral-500` to `#8E8E93` and weight to 600
-- Remove some section headings entirely where the content is self-explanatory:
-  - "Data gaps" heading can stay (it is important context)
-  - "Remediation summary" on Overview — the content (quick wins count, etc.) speaks for itself; remove the heading or make it part of the card title
-- Add `letter-spacing: -0.02em` to all `h1`, `h2`, `h3` elements
-- Card titles: 20px (not 17px) for cluster detail and dimension detail page titles
-
-### 8. Header / navigation
-
-**Current:** Flex row, border-bottom, system name + nav links + no avatar.
-**Target:** Keep the structure but update styling:
-
-- Remove `border-b` — use spacing to separate from content
-- System name: 14px, weight 700, letter-spacing 0.1em, uppercase
-- Nav links: 14px, weight 500, inactive in `#8E8E93`, active in `#1A1A1A`
-- Add a 36px dark circle on the right (avatar placeholder or settings icon)
-- Increase bottom margin to 32px
-
-### 9. Breadcrumbs
-
-**Current:** `/` separator, 14px, neutral-600.
-**Target:** `›` separator, 13px, same colours. Add `margin-bottom: 24px` (reduce from current 32px to tighten with content).
-
-### 10. Remediation view
-
-**Current:** Three sections (quick wins, foundational, post-migration) that look identical.
-**Target:** Visual differentiation by tier:
-
-- **Quick wins:** Each item gets a small green-tinted left border (3px, rounded, `#166534` at 40% opacity)
-- **Foundational blockers:** Small amber-tinted left border (`#b45309` at 40% opacity)
-- **Post-migration:** No left border, lighter text treatment (the "someday" tier)
-
-Each remediation item should be in its own mini-card (white background, 20px radius, 24px padding) within the section. Remove `border-b` between items.
-
-The ownership filter buttons:
-- Inactive: `bg-transparent`, `border: 1px solid #E8E8EC`, `border-radius: 20px` (pill shape), 13px
-- Active: `bg-[#1A1A1A]`, `text-white`, same pill shape
-
-### 11. Dimension detail — score scale
-
-**Current:** Plain `<ul>` listing all levels.
-**Target:** Highlight the current score level. The active level gets a left accent bar (3px, semantic colour) and slightly bolder text. Other levels stay muted.
-
-### 12. Comparison placeholder
-
-**Current:** Grey box with centred text.
-**Target:** Same card treatment as the rest. White card, 28px radius, centred content, a simple illustration-style icon (optional — even just a `—` or empty state text is fine).
-
-### 13. index.css updates
-
-```css
-@import 'tailwindcss';
-
-@theme {
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --color-fail: #b91c1c;
-  --color-partial: #b45309;
-  --color-pass: #166534;
-  --color-accent: #1e3a5f;
-  --color-muted: #8E8E93;
-  --color-line: #E8E8EC;
-  --color-bg: #F2F2F6;
-  --color-card: #FFFFFF;
-  --radius-card: 28px;
-  --radius-sm: 16px;
-  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.04);
-}
-
-body {
-  margin: 0;
-  font-family: var(--font-sans);
-  font-weight: 400;
-  font-size: 15px;
-  line-height: 1.5;
-  color: #1A1A1A;
-  background: var(--color-bg);
-  -webkit-font-smoothing: antialiased;
-}
-
-h1, h2, h3 {
-  font-weight: 600;
-  letter-spacing: -0.02em;
-}
-
-#root {
-  min-height: 100vh;
-}
-
-a, button {
-  transition: none;
-}
+annual_theme_cost =
+  manual_updates × minutes_per_update × hourly_rate / 60 × theme_changes_per_year
 ```
+`flat_token_count` derived from token architecture audit data.
 
-Drop Inter from Google Fonts in `index.html`. Use the system font stack throughout. This is faster, feels more native, and aligns with the reference.
+**Parity defects:**
+```
+estimated_defects_per_release =
+  undocumented_gap_count × probability_of_surfacing
+
+annual_defect_cost =
+  defects_per_release × avg_hours_to_fix × hourly_rate × releases_per_year
+```
+`undocumented_gap_count` from parity audit data. `engineers` count input drives `avg_hours_to_fix` scaling.
+
+**Token efficiency:** No formula yet. Placeholder until experiment data is available.
+
+### Which headcount input drives which category
+
+- Correction cycles: designer count (designers are re-specifying intent)
+- Theme rework: both (designers and engineers both touch theme changes)
+- Parity defects: engineer count (engineers fix code mismatches)
+- Token efficiency (when live): both
 
 ---
 
-## What NOT to change
+## Page-level decisions not yet implemented
 
-- **Data layer:** All imports, types, helpers, JSON files stay untouched
-- **Navigation logic:** The `AppView` state machine and all `onCluster`/`onDimension`/`onOverview` handlers stay the same
-- **Semantic colour logic:** `scoreBarTone()` and the fail/partial/pass mapping stays
-- **Content:** All text comes from the audit JSON — do not hardcode content
-- **Component structure:** Keep the same component breakdown (Header, Overview, ClusterDetail, DimensionDetail, RemediationView, ComparisonView). Refactor visual presentation within them.
+### D1 -- Finding IDs
+
+Internal IDs (CDC-001, REM-003) are currently visible. For client-facing display, replace with sequential numbers generated at render time, sorted by severity_rank descending. IDs remain in the data for internal linking. Front-end only change. Deferred until editorial pass.
+
+### D3 -- Methodology note
+
+`report.methodology_note` is empty in both editorial JSONs. Needs 2-3 sentences: what the audit measures, how scores work, what blocker/warning/pass means. Editorial content -- to be drafted during the editorial pass with Eeva, not a code task.
 
 ---
 
-## Implementation order
+## Open topics
 
-1. `index.css` — update theme variables, fonts, background
-2. `index.html` — remove Google Fonts link
-3. `App.tsx` — Header component
-4. `App.tsx` — Hero/verdict block
-5. `App.tsx` — Cluster grid cards
-6. `App.tsx` — Top blockers
-7. `App.tsx` — Score bars (ScoreBar, ClusterScoreBar)
-8. `App.tsx` — Remediation view
-9. `App.tsx` — Breadcrumbs
-10. `App.tsx` — Cluster detail + Dimension detail
-11. `App.tsx` — Comparison placeholder
+### severity_rank on RemediationItem
 
-Preview after each step with `npm run dev`. Commit after step 7 (core overview done) and again after step 11.
+Currently the remediation sort uses two keys: `priority_tier` ascending, then `effort_estimate` ascending. A third key (`severity_rank` descending) would improve visual hierarchy on the remediation page and in the drill-down. This requires a schema change to remediation-schema.json: add `severity_rank: number` (max severity_rank from linked findings) to `RemediationItem`. Deferred to the next audit engine session. When implemented, the front-end sort becomes a one-line addition.
+
+**Impact on front-end design:** Sort order drives card prominence, visual hierarchy, and how the remediation roadmap reads. This is not just a data concern.
+
+### Tier separator design
+
+The visual treatment for tier separators in the dimensions table is TBD. Must communicate "structural" vs "heuristic" without splitting the table. To be refined in Cursor with a visual reference.
+
+### Responsive behaviour
+
+This release targets desktop only (MacBook 13" max, ~1440px). Responsive behaviour is deferred.
+
+### DESIGN-SPEC.md scope
+
+This file covers layout, interaction patterns, and design decisions. It does not cover:
+- Prose content (editorial pass with Eeva)
+- Visual design refinement (spacing, typography tuning -- Diana's layer)
+- Score recalculation or audit methodology

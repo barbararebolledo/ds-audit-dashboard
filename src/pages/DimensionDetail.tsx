@@ -78,7 +78,7 @@ export default function DimensionDetail({ system, dimensionRef }: {
             <div className="mt-4 flex gap-2">
               {ref.evidence_sources.map(s => (
                 <span key={s} className="text-[11px] uppercase tracking-wider px-3 py-1 rounded-full" style={{ border: '1px solid rgba(245, 233, 200, 0.15)', opacity: 0.6 }}>
-                  {s}
+                  {s === 'Both' ? 'Figma + Code' : s}
                 </span>
               ))}
             </div>
@@ -145,9 +145,8 @@ export default function DimensionDetail({ system, dimensionRef }: {
             {remItems.map(item => (
               <div key={item.id} className="p-6" style={{ backgroundColor: '#161616', borderRadius: '24px' }}>
                 <div className="flex items-center gap-3 mb-2">
-                  <span className="text-[11px] uppercase tracking-wider font-mono" style={{ opacity: 0.5 }}>{item.id}</span>
                   <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded" style={{ border: '1px solid rgba(245, 233, 200, 0.15)', opacity: 0.6 }}>
-                    Tier {item.priority_tier} · {item.ownership} · {item.effort_estimate}
+                    {item.priority_tier === 1 ? 'Quick Win' : item.priority_tier === 2 ? 'Foundational' : 'Post-Migration'} · {item.ownership} · {item.effort_estimate}
                   </span>
                 </div>
                 <p className="text-[14px] font-medium m-0 mb-2">{item.action}</p>
@@ -177,8 +176,7 @@ function FindingCard({ finding }: { finding: ReturnType<typeof getMergedFinding>
       <div className="flex items-start gap-3">
         <SeverityDot severity={finding.severity} />
         <div className="flex-1">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] uppercase tracking-widest font-mono" style={{ opacity: 0.6 }}>{finding.id}</span>
+          <div className="flex items-center justify-end mb-2">
             <SeverityBadge severity={finding.severity} />
           </div>
           <p className="text-[14px] font-medium m-0 mb-1">{finding.summary}</p>
@@ -195,9 +193,6 @@ function FindingCard({ finding }: { finding: ReturnType<typeof getMergedFinding>
                 </div>
               )}
             </div>
-          )}
-          {!expanded && (
-            <p className="text-[12px] m-0 mt-1" style={{ opacity: 0.4 }}>Click to expand</p>
           )}
         </div>
       </div>

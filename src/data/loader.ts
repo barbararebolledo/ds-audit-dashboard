@@ -97,7 +97,7 @@ export const CLUSTER_ORDER = [
   '0_prerequisites',
   '1_token_and_variable_system',
   '2_component_quality',
-  '3_documentation_and_intent',
+  '3_documentation_readiness',
   '4_design_quality_baseline',
   '5_governance_and_ecosystem',
   '6_design_to_code_parity',

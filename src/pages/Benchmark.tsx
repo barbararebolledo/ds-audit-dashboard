@@ -264,7 +264,6 @@ export default function Benchmark({ systems }: { systems: AuditSystem[] }) {
           <div className="grid grid-cols-2 gap-x-8 gap-y-4">
             {sharedBlockers.map(b => (
               <div key={b.id} className="flex items-start gap-3">
-                <span className="text-[11px] uppercase tracking-wider font-mono mt-0.5" style={{ color: '#888888' }}>{b.id}</span>
                 <span className="text-[14px]" style={{ color: '#CCCCCC' }}>{b.summary}</span>
               </div>
             ))}

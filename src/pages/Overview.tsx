@@ -66,19 +66,14 @@ export default function Overview({ system }: {
       ? 'Conditionally ready'
       : 'Not ready for AI-assisted workflows'
 
-  // Executive summary
-  const execSummary = editorial.report?.executive_summary
+  const readinessShort = summary.phase_readiness === 'pass'
+    ? '(ready)'
+    : summary.phase_readiness === 'conditional_pass'
+      ? '(conditionally ready)'
+      : '(not ready)'
 
   return (
     <main className="grid grid-cols-12 gap-6 w-full">
-      {/* Executive summary */}
-      {execSummary && (
-        <div className="col-span-12 p-8" style={{ backgroundColor: '#161616', borderRadius: '32px' }}>
-          <LabelCaps className="mb-3">Executive Summary</LabelCaps>
-          <p className="text-[15px] leading-relaxed m-0" style={{ opacity: 0.8 }}>{execSummary}</p>
-        </div>
-      )}
-
       {/* Overall Score Card */}
       <section className="col-span-8 p-10 flex flex-col justify-between" style={{ backgroundColor: '#161616', borderRadius: '32px', minHeight: '340px' }}>
         <div>
@@ -101,14 +96,27 @@ export default function Overview({ system }: {
             <span className="text-[48px] ml-1" style={{ opacity: 0.5 }}>%</span>
           </h1>
         </div>
-        <div className="mt-12 flex items-end justify-between">
-          <div>
-            <LabelCaps className="mb-1">Target Design System</LabelCaps>
-            <p className="text-[20px] font-medium tracking-tight m-0">{audit.meta.system_name}</p>
+        <div className="mt-12 flex flex-col gap-4">
+          <div className="flex items-end justify-between">
+            <div>
+              <LabelCaps className="mb-1">Target Design System</LabelCaps>
+              <p className="text-[20px] font-medium tracking-tight m-0">{audit.meta.system_name}</p>
+            </div>
+            <div className="text-right">
+              <LabelCaps className="mb-1">Audit Date</LabelCaps>
+              <p className="text-[14px] m-0" style={{ opacity: 0.6 }}>{audit.meta.audit_date}</p>
+            </div>
           </div>
-          <div className="text-right">
-            <LabelCaps className="mb-1">Audit Date</LabelCaps>
-            <p className="text-[14px] m-0" style={{ opacity: 0.6 }}>{audit.meta.audit_date}</p>
+
+          <div className="max-w-[72ch]">
+            <p className="text-[13px] leading-relaxed m-0" style={{ opacity: 0.8 }}>
+              {audit.meta.system_name} scores {summary.overall_score.toFixed(1)}/100 {readinessShort} with {summary.blocker_count} dimension-level blocker{summary.blocker_count !== 1 ? 's' : ''}.
+            </p>
+            {editorial.report?.executive_summary && (
+              <p className="text-[13px] leading-relaxed mt-2 mb-0" style={{ opacity: 0.75 }}>
+                {editorial.report.executive_summary}
+              </p>
+            )}
           </div>
         </div>
       </section>
@@ -143,7 +151,6 @@ export default function Overview({ system }: {
             return (
               <BlockerCard
                 key={blocker.id}
-                code={blocker.id}
                 category={clusterName}
                 description={blocker.summary}
                 onClick={() => navigate(`/dimension/${blocker.dimension}`)}

@@ -97,9 +97,9 @@ export interface RemediationItem {
   effort_estimate: 'hours' | 'days' | 'weeks'
   ownership: 'design' | 'engineering' | 'both'
   priority_tier: 1 | 2 | 3
-  remediation_type: string
+  remediation_type: 'relocate' | 'refactor' | 'rebuild'
   value_framing?: string
-  impact_categories?: string[]
+  impact_categories?: ('correction_cycles' | 'theme_rework' | 'parity_defects' | 'token_efficiency')[]
   projected_score_improvement?: string
   finding_ids?: string[]
 }
