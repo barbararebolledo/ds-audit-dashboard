@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import type { AuditSystem, RemediationItem } from '../data/types'
 import { remediationByTier, getMergedRemItem } from '../data/loader'
-import { FilterButton, ImpactBadge } from '../components/shared'
+import { FilterButton, ImpactBadge } from '../components'
 
 function ClockIcon({ size = 14 }: { size?: number }) {
   return (

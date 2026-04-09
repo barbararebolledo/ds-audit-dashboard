@@ -8,7 +8,7 @@ import {
   clusterDisplayNumber,
   getMergedFinding,
 } from '../data/loader'
-import { LabelCaps, BlockerCard, DimensionScoreCard } from '../components/shared'
+import { LabelCaps, BlockerCard, DimensionScoreCard } from '../components'
 
 function RemediationSummaryItem({ color, label, effort, count, borderBottom, dimmed }: {
   color: string; label: string; effort: string; count: number; borderBottom: boolean; dimmed: boolean

@@ -10,7 +10,7 @@ import {
   getMergedRemItem,
   severityColor,
 } from '../data/loader'
-import { LabelCaps, Breadcrumbs, SeverityBadge, SeverityDot } from '../components/shared'
+import { LabelCaps, Breadcrumbs, SeverityBadge, SeverityDot } from '../components'
 
 export default function DimensionDetail({ system, dimensionRef }: {
   system: AuditSystem

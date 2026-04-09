@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { loadAppData } from './data/loader'
-import { Header } from './components/shared'
+import { Header } from './components'
 import Overview from './pages/Overview'
 import Remediation from './pages/Remediation'
 import Benchmark from './pages/Benchmark'

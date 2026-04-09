@@ -1,6 +1,6 @@
 import type { AuditSystem } from '../data/types'
 import { CLUSTER_ORDER, clusterNarrative } from '../data/loader'
-import { LabelCaps } from '../components/shared'
+import { LabelCaps } from '../components'
 
 function TiedBar({ label, score, pct }: { label: string; score: string; pct: number }) {
   return (

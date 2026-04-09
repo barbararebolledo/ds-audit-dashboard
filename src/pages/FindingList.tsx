@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import type { AuditSystem } from '../data/types'
 import { getMergedFinding, clusterForDimension } from '../data/loader'
-import { LabelCaps, FilterButton, SeverityDot, SeverityBadge } from '../components/shared'
+import { LabelCaps, FilterButton, SeverityDot, SeverityBadge } from '../components'
 
 type SeverityFilter = 'all' | 'blocker' | 'warning' | 'note' | 'pass'
 

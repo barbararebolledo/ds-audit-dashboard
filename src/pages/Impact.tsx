@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import type { AuditSystem } from '../data/types'
 import { resolveTopBlockers, getMergedFinding, clusterValueFraming } from '../data/loader'
-import { LabelCaps } from '../components/shared'
+import { LabelCaps } from '../components'
 
 function RangeSlider({ id, min, max, value, step, onChange }: {
   id: string; min: number; max: number; value: number; step: number; onChange: (e: React.ChangeEvent<HTMLInputElement>) => void

@@ -9,7 +9,7 @@ import {
   severityColor,
   clusterDisplayNumber,
 } from '../data/loader'
-import { LabelCaps, Breadcrumbs, SeverityBadge, SeverityDot } from '../components/shared'
+import { LabelCaps, Breadcrumbs, SeverityBadge, SeverityDot } from '../components'
 
 export default function ClusterDetail({ system, dimensionRef }: {
   system: AuditSystem
