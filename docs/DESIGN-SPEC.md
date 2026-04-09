@@ -4,6 +4,7 @@
 Last updated: 2026-04-09
 Status: Active -- reflects confirmed decisions from ADR 011 session
 Affects: all pages, component patterns, layout structure
+Governed by: DESIGN-PRINCIPLES.md (design principles and tone of voice)
 
 ---
 
