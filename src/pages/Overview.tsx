@@ -61,16 +61,10 @@ export default function Overview({ system }: {
   // Readiness badge
   const readinessColor = summary.phase_readiness === 'pass' ? '#4ADE80' : summary.phase_readiness === 'conditional_pass' ? '#F5A623' : '#FF6B6B'
   const readinessLabel = summary.phase_readiness === 'pass'
-    ? 'Ready for AI-assisted workflows'
+    ? 'Ready: AI tools can work with this system reliably.'
     : summary.phase_readiness === 'conditional_pass'
-      ? 'Conditionally ready'
-      : 'Not ready for AI-assisted workflows'
-
-  const readinessShort = summary.phase_readiness === 'pass'
-    ? '(ready)'
-    : summary.phase_readiness === 'conditional_pass'
-      ? '(conditionally ready)'
-      : '(not ready)'
+      ? 'Conditionally ready: some manual correction still required.'
+      : 'Not ready: AI tools will need significant human correction.'
 
   return (
     <main className="grid grid-cols-12 gap-6 w-full">
@@ -110,7 +104,7 @@ export default function Overview({ system }: {
 
           <div className="max-w-[72ch]">
             <p className="text-[13px] leading-relaxed m-0" style={{ opacity: 0.8 }}>
-              {audit.meta.system_name} scores {summary.overall_score.toFixed(1)}/100 {readinessShort} with {summary.blocker_count} dimension-level blocker{summary.blocker_count !== 1 ? 's' : ''}.
+              {audit.meta.system_name} scores {summary.overall_score.toFixed(1)}/100 with {summary.blocker_count} structural gap{summary.blocker_count !== 1 ? 's' : ''} that affect AI tool reliability.
             </p>
             {editorial.report?.executive_summary && (
               <p className="text-[13px] leading-relaxed mt-2 mb-0" style={{ opacity: 0.75 }}>
@@ -136,10 +130,10 @@ export default function Overview({ system }: {
         </div>
       </section>
 
-      {/* Top Blockers */}
+      {/* Top Priorities */}
       <div className="col-span-12 mt-4">
         <div className="flex items-center justify-between mb-5">
-          <LabelCaps>Top Blockers</LabelCaps>
+          <LabelCaps>Top Priorities</LabelCaps>
           <span className="text-[12px]" style={{ opacity: 0.5 }}>
             {summary.blocker_count} Blocker{summary.blocker_count !== 1 ? 's' : ''} · {audit.findings.length} Total Findings
           </span>

@@ -186,11 +186,11 @@ export default function Impact({ system }: { system: AuditSystem }) {
       .format(val).replace(/[^\d.,]/g, '').trim()
 
   const correctionFraming = clusterValueFraming('3_documentation_readiness', editorial)
-    ?? 'Projected hours spent on human corrections when AI agents lack component intent documentation.'
+    ?? 'Projected time spent on manual corrections when AI tools cannot find clear instructions for how components should be used.'
   const themeFraming = clusterValueFraming('1_token_and_variable_system', editorial)
-    ?? 'Projected cost of manual updates when token architecture lacks semantic layers.'
+    ?? 'Projected cost of manual updates when changing a theme requires editing values one component at a time instead of once.'
   const parityFraming = clusterValueFraming('6_design_to_code_parity', editorial)
-    ?? 'Projected cost of bugs from undocumented Figma-to-code mismatches surfacing in QA or production.'
+    ?? 'Projected cost of bugs from differences between design files and code that are not documented anywhere.'
 
   const quantifiedCards = [
     {
@@ -242,7 +242,7 @@ export default function Impact({ system }: { system: AuditSystem }) {
       <div className="mb-10">
         <h1 className="text-[clamp(2rem,4vw,3rem)] font-medium tracking-tight mb-3" style={{ color: '#F5E9C8' }}>Impact Calculator</h1>
         <p className="text-[16px] max-w-[42rem] m-0" style={{ color: 'rgba(245, 233, 200, 0.5)' }}>
-          Projected costs and savings from remediating the {system.name} design system based on current AI-readiness audit scores.
+          What resolving the gaps in {system.name} could save your team annually.
         </p>
       </div>
 
@@ -282,7 +282,7 @@ export default function Impact({ system }: { system: AuditSystem }) {
               <div>
                 <h2 className="text-[12px] uppercase tracking-[0.08em] font-semibold mb-2" style={{ opacity: 0.8 }}>Total Projected Annual Savings</h2>
                 <p className="text-[15px] max-w-[24rem] m-0" style={{ opacity: 0.7 }}>
-                  Calculated estimate if all foundational and post-migration blockers are remediated.
+                  If all priority actions are completed.
                 </p>
               </div>
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full whitespace-nowrap" style={{ backgroundColor: 'rgba(11,11,11,0.05)', border: '1px solid rgba(11,11,11,0.1)' }}>
@@ -359,7 +359,7 @@ export default function Impact({ system }: { system: AuditSystem }) {
             </div>
             <h3 className="text-[16px] font-medium mb-2 m-0" style={{ color: '#F5E9C8' }}>Token Efficiency</h3>
             <p className="text-[13px] leading-relaxed m-0" style={{ color: 'rgba(245, 233, 200, 0.5)' }}>
-              Token consumption is an operational and environmental cost — compute, energy, water for cooling. This category becomes quantifiable after the token efficiency experiment.
+              Token consumption is an operational and environmental cost: compute, energy, and water for cooling. This category becomes quantifiable after the token efficiency experiment.
             </p>
           </div>
         </section>

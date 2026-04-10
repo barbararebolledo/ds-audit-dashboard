@@ -12,6 +12,7 @@ export default function FindingList({ system }: { system: AuditSystem }) {
   const [severityFilter, setSeverityFilter] = useState<SeverityFilter>('all')
   const [clusterFilter, setClusterFilter] = useState<string>('all')
 
+  const { remediation } = system
   const mergedFindings = audit.findings.map(f => getMergedFinding(f, editorial))
 
   // Get unique clusters from findings
@@ -19,8 +20,23 @@ export default function FindingList({ system }: { system: AuditSystem }) {
     mergedFindings.map(f => clusterForDimension(audit, f.dimension)).filter(Boolean)
   )] as string[]
 
-  // Sort by severity_rank desc (most severe first)
-  const sorted = [...mergedFindings].sort((a, b) => b.severity_rank - a.severity_rank)
+  // Build finding_id → priority_tier map from remediation items
+  const findingTierMap = new Map<string, number>()
+  remediation.items.forEach(item => {
+    const tier = item.priority_tier
+    ;(item.finding_ids ?? []).forEach(fid => {
+      const existing = findingTierMap.get(fid)
+      if (existing === undefined || tier < existing) findingTierMap.set(fid, tier)
+    })
+  })
+
+  // Sort by tier ascending (tier 1 first), then severity_rank descending
+  const sorted = [...mergedFindings].sort((a, b) => {
+    const tierA = findingTierMap.get(a.id) ?? 999
+    const tierB = findingTierMap.get(b.id) ?? 999
+    if (tierA !== tierB) return tierA - tierB
+    return b.severity_rank - a.severity_rank
+  })
 
   const filtered = sorted.filter(f => {
     if (severityFilter !== 'all' && f.severity !== severityFilter) return false
@@ -46,7 +62,7 @@ export default function FindingList({ system }: { system: AuditSystem }) {
         <div>
           <h1 className="text-[44px] font-medium tracking-tight m-0 mb-3" style={{ color: 'white' }}>Findings</h1>
           <p className="text-[15px] m-0" style={{ color: 'rgba(245, 233, 200, 0.6)' }}>
-            All audit findings for {system.name} — {mergedFindings.length} total
+            What the audit found: {mergedFindings.length} findings across all dimensions
           </p>
         </div>
       </div>

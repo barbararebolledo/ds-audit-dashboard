@@ -92,6 +92,7 @@ export interface AuditJSON {
 export interface RemediationItem {
   id: string
   action: string
+  action_type?: 'move' | 'rework' | 'create'
   affected_cluster: string
   affected_dimensions: string[]
   effort_estimate: 'hours' | 'days' | 'weeks'

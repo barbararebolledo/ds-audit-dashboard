@@ -15,12 +15,12 @@ import type {
 
 // ── Static JSON imports from sibling repo ──
 
-import muiAudit from '@audit/audit/material-ui/v3.1/mui-audit-v3.1.json'
-import muiRemediation from '@audit/audit/material-ui/v3.1/mui-remediation-v3.1.json'
-import muiEditorial from '@audit/audit/material-ui/v3.1/mui-editorial-v3.1.json'
-import carbonAudit from '@audit/audit/carbon/v3.1/carbon-audit-v3.1.json'
-import carbonRemediation from '@audit/audit/carbon/v3.1/carbon-remediation-v3.1.json'
-import carbonEditorial from '@audit/audit/carbon/v3.1/carbon-editorial-v3.1.json'
+import muiAudit from '@audit/audit/material-ui/v3.2/mui-audit-v3.2.json'
+import muiRemediation from '@audit/audit/material-ui/v3.2/mui-remediation-v3.2.json'
+import muiEditorial from '@audit/audit/material-ui/v3.2/mui-editorial-v3.2.json'
+import carbonAudit from '@audit/audit/carbon/v3.2/carbon-audit-v3.2.json'
+import carbonRemediation from '@audit/audit/carbon/v3.2/carbon-remediation-v3.2.json'
+import carbonEditorial from '@audit/audit/carbon/v3.2/carbon-editorial-v3.2.json'
 import dimensionRefData from '@audit/data/dimension-reference.json'
 import scoringWeightsData from '@audit/config/scoring-weights.json'
 
@@ -72,7 +72,7 @@ export function loadAppData(): AppData {
       buildSystem(
         'material-ui',
         'Material UI',
-        'v3.1',
+        'v3.2',
         muiAudit as unknown as AuditJSON,
         muiRemediation as unknown as RemediationJSON,
         muiEditorial as unknown as EditorialJSON,
@@ -80,7 +80,7 @@ export function loadAppData(): AppData {
       buildSystem(
         'carbon',
         'Carbon',
-        'v3.1',
+        'v3.2',
         carbonAudit as unknown as AuditJSON,
         carbonRemediation as unknown as RemediationJSON,
         carbonEditorial as unknown as EditorialJSON,

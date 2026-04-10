@@ -149,7 +149,14 @@ export default function DimensionDetail({ system, dimensionRef }: {
                     {item.priority_tier === 1 ? 'Quick Win' : item.priority_tier === 2 ? 'Foundational' : 'Post-Migration'} · {item.ownership} · {item.effort_estimate}
                   </span>
                 </div>
-                <p className="text-[14px] font-medium m-0 mb-2">{item.action}</p>
+                <p className="text-[14px] font-medium m-0 mb-2">
+                  {item.action_type && (
+                    <span className="text-[11px] uppercase tracking-wider font-medium mr-2" style={{ opacity: 0.5 }}>
+                      {item.action_type.charAt(0).toUpperCase() + item.action_type.slice(1)}:
+                    </span>
+                  )}
+                  {item.action}
+                </p>
                 {item.value_framing && (
                   <p className="text-[13px] m-0 mt-3" style={{ opacity: 0.5 }}>{item.value_framing}</p>
                 )}

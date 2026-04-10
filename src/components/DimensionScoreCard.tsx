@@ -29,7 +29,7 @@ export function DimensionScoreCard({ number, title, scorePercent, color, descrip
         </svg>
       </div>
       <div className="mb-5">
-        <div className="text-[32px] font-medium leading-none mb-4" style={color === '#FF6B6B' ? { color } : {}}>
+        <div className="text-[32px] font-medium leading-none mb-4" style={{ color }}>
           {scorePercent.toFixed(1)}%
         </div>
         <ProgressBar width={scorePercent} color={color} />

@@ -6,8 +6,8 @@ function TiedBar({ label, score, pct }: { label: string; score: string; pct: num
   return (
     <div className="mb-6">
       <div className="flex justify-between items-center mb-2">
-        <span className="text-[14px] font-medium" style={{ color: '#CCCCCC' }}>{label}</span>
-        <span className="text-[11px] uppercase tracking-wider" style={{ color: '#888888' }}>Tied · {score}</span>
+        <span className="text-[14px] font-medium" style={{ color: 'rgba(245, 233, 200, 0.8)' }}>{label}</span>
+        <span className="text-[11px] uppercase tracking-wider" style={{ color: 'rgba(245, 233, 200, 0.5)' }}>Tied · {score}</span>
       </div>
       <div className="h-8 rounded-full overflow-hidden flex relative" style={{ backgroundColor: '#111111' }}>
         <div className="absolute left-1/2 top-0 bottom-0 w-px z-10" style={{ backgroundColor: '#333333' }} />
@@ -38,21 +38,21 @@ function ComparisonBar({ label, muiScore, carbonScore, muiName, carbonName }: {
   const muiBarH = muiLeads ? 'h-3' : 'h-2'
   const carbonBarH = muiLeads ? 'h-2' : 'h-3'
   const muiColor = '#F5E9C8'
-  const carbonColor = '#888888'
+  const carbonColor = 'rgba(245, 233, 200, 0.5)'
 
   return (
     <div className="mb-6">
       <div className="flex justify-between items-center mb-2">
-        <span className="text-[14px] font-medium" style={{ color: '#CCCCCC' }}>{label}</span>
+        <span className="text-[14px] font-medium" style={{ color: 'rgba(245, 233, 200, 0.8)' }}>{label}</span>
         <div className="flex items-center gap-3">
           <span className="text-[14px] font-medium" style={{ color: '#F5E9C8' }}>{muiScore.toFixed(1)}%</span>
-          <span className="text-[11px] uppercase tracking-wider" style={{ color: '#888888' }}>vs</span>
-          <span className="text-[14px] font-medium" style={{ color: '#888888' }}>{carbonScore.toFixed(1)}%</span>
+          <span className="text-[11px] uppercase tracking-wider" style={{ color: 'rgba(245, 233, 200, 0.5)' }}>vs</span>
+          <span className="text-[14px] font-medium" style={{ color: 'rgba(245, 233, 200, 0.5)' }}>{carbonScore.toFixed(1)}%</span>
           <span
             className="px-2 py-0.5 rounded text-[11px] font-medium"
             style={{
-              backgroundColor: muiLeads ? 'rgba(245, 233, 200, 0.1)' : 'rgba(136, 136, 136, 0.1)',
-              color: muiLeads ? '#F5E9C8' : '#888888',
+              backgroundColor: muiLeads ? 'rgba(245, 233, 200, 0.1)' : 'rgba(245, 233, 200, 0.05)',
+              color: muiLeads ? '#F5E9C8' : 'rgba(245, 233, 200, 0.5)',
             }}
           >
             +{absDelta} {leader}
@@ -76,7 +76,7 @@ function ProfileCard({ system, leads, color }: {
   system: AuditSystem; leads: { label: string; value: string; description: string }[]; color: string
 }) {
   return (
-    <div className="p-8" style={{ backgroundColor: '#1A1A1A', borderRadius: '28px', border: '1px solid #222222' }}>
+    <div className="p-8" style={{ backgroundColor: '#161616', borderRadius: '28px', border: '1px solid rgba(245, 233, 200, 0.15)' }}>
       <div className="flex items-center gap-4 mb-6">
         <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: `${color}15`, border: `1px solid ${color}30` }}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -94,7 +94,7 @@ function ProfileCard({ system, leads, color }: {
               <span className="text-[15px] font-medium" style={{ color: 'white' }}>{item.label}</span>
               <span className="text-[16px] font-medium" style={{ color }}>{item.value}</span>
             </div>
-            <p className="text-[13px] leading-relaxed m-0" style={{ color: '#888888' }}>{item.description}</p>
+            <p className="text-[13px] leading-relaxed m-0" style={{ color: 'rgba(245, 233, 200, 0.5)' }}>{item.description}</p>
           </div>
         ))}
       </div>
@@ -135,15 +135,15 @@ export default function Benchmark({ systems }: { systems: AuditSystem[] }) {
       {/* Header */}
       <header>
         <div className="flex items-baseline gap-6 mb-4">
-          <h1 className="text-[44px] leading-tight font-light tracking-tight m-0" style={{ color: 'white' }}>Benchmark Comparison</h1>
-          <span className="text-[17px] font-light" style={{ color: '#888888' }}>{sys1.name} vs {sys2.name}</span>
+          <h1 className="text-[44px] leading-tight font-medium tracking-tight m-0" style={{ color: 'white' }}>Benchmark Comparison</h1>
+          <span className="text-[17px] font-medium" style={{ color: 'rgba(245, 233, 200, 0.5)' }}>{sys1.name} vs {sys2.name}</span>
         </div>
-        <p className="text-[17px] leading-relaxed max-w-2xl mb-6 m-0" style={{ color: '#888888' }}>
-          Two systems only {Math.abs(delta).toFixed(1)} points apart overall, with genuinely different cluster profiles.
+        <p className="text-[17px] leading-relaxed max-w-2xl mb-6 m-0" style={{ color: 'rgba(245, 233, 200, 0.5)' }}>
+          Two systems only {Math.abs(delta).toFixed(1)} points apart overall, with different cluster profiles.
         </p>
         <div className="flex gap-4">
-          <div className="inline-flex items-center gap-3 px-4 py-2.5 rounded-lg" style={{ backgroundColor: '#1A1A1A', border: '1px solid #2A2A2A' }}>
-            <span className="text-[11px] uppercase tracking-widest font-medium" style={{ color: '#888888' }}>Same methodology, same scoring model</span>
+          <div className="inline-flex items-center gap-3 px-4 py-2.5 rounded-lg" style={{ backgroundColor: '#161616', border: '1px solid rgba(245, 233, 200, 0.15)' }}>
+            <span className="text-[11px] uppercase tracking-widest font-medium" style={{ color: 'rgba(245, 233, 200, 0.5)' }}>Same methodology, same scoring model</span>
           </div>
           <div className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg" style={{ backgroundColor: 'rgba(245, 233, 200, 0.1)', border: '1px solid rgba(245, 233, 200, 0.3)' }}>
             <span className="w-2 h-2 rounded-full" style={{ backgroundColor: '#F5E9C8' }} />
@@ -151,9 +151,9 @@ export default function Benchmark({ systems }: { systems: AuditSystem[] }) {
               {sys1.name}: {a1.summary.overall_score.toFixed(1)}% ({a1.summary.blocker_count} blockers)
             </span>
           </div>
-          <div className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg" style={{ backgroundColor: 'rgba(136, 136, 136, 0.1)', border: '1px solid rgba(136, 136, 136, 0.3)' }}>
-            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: '#888888' }} />
-            <span className="text-[11px] uppercase tracking-widest font-medium" style={{ color: '#888888' }}>
+          <div className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg" style={{ backgroundColor: 'rgba(245, 233, 200, 0.05)', border: '1px solid rgba(245, 233, 200, 0.15)' }}>
+            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: 'rgba(245, 233, 200, 0.5)' }} />
+            <span className="text-[11px] uppercase tracking-widest font-medium" style={{ color: 'rgba(245, 233, 200, 0.5)' }}>
               {sys2.name}: {a2.summary.overall_score.toFixed(1)}% ({a2.summary.blocker_count} blockers)
             </span>
           </div>
@@ -161,42 +161,42 @@ export default function Benchmark({ systems }: { systems: AuditSystem[] }) {
       </header>
 
       {/* Summary Card */}
-      <div className="p-8 mb-0" style={{ backgroundColor: '#1A1A1A', borderRadius: '32px', border: '1px solid #222222' }}>
+      <div className="p-8 mb-0" style={{ backgroundColor: '#161616', borderRadius: '32px', border: '1px solid rgba(245, 233, 200, 0.15)' }}>
         <div className="grid grid-cols-3 gap-8">
           <div className="text-center pr-8" style={{ borderRight: '1px solid rgba(51,51,51,0.5)' }}>
             <LabelCaps className="mb-2" style={{ color: '#F5E9C8' }}>{sys1.name}</LabelCaps>
             <div className="text-[64px] leading-none font-light tracking-tight mb-2" style={{ color: '#F5E9C8' }}>{a1.summary.overall_score.toFixed(1)}%</div>
-            <div className="text-[13px]" style={{ color: '#888888' }}>Overall Score · {a1.summary.blocker_count} blockers</div>
+            <div className="text-[13px]" style={{ color: 'rgba(245, 233, 200, 0.5)' }}>Overall Score · {a1.summary.blocker_count} blockers</div>
           </div>
           <div className="text-center flex flex-col items-center justify-center">
-            <LabelCaps className="mb-2" style={{ color: '#888888' }}>Delta</LabelCaps>
+            <LabelCaps className="mb-2" style={{ color: 'rgba(245, 233, 200, 0.5)' }}>Delta</LabelCaps>
             <div className="text-[32px] font-light tracking-tight" style={{ color: 'white' }}>{delta > 0 ? '+' : ''}{delta.toFixed(1)}</div>
-            <div className="text-[13px]" style={{ color: '#888888' }}>{leader} leads by {Math.abs(delta).toFixed(1)} points</div>
+            <div className="text-[13px]" style={{ color: 'rgba(245, 233, 200, 0.5)' }}>{leader} leads by {Math.abs(delta).toFixed(1)} points</div>
           </div>
           <div className="text-center pl-8">
-            <LabelCaps className="mb-2" style={{ color: '#888888' }}>{sys2.name}</LabelCaps>
-            <div className="text-[64px] leading-none font-light tracking-tight mb-2" style={{ color: '#888888' }}>{a2.summary.overall_score.toFixed(1)}%</div>
-            <div className="text-[13px]" style={{ color: '#888888' }}>Overall Score · {a2.summary.blocker_count} blockers</div>
+            <LabelCaps className="mb-2" style={{ color: 'rgba(245, 233, 200, 0.5)' }}>{sys2.name}</LabelCaps>
+            <div className="text-[64px] leading-none font-light tracking-tight mb-2" style={{ color: 'rgba(245, 233, 200, 0.5)' }}>{a2.summary.overall_score.toFixed(1)}%</div>
+            <div className="text-[13px]" style={{ color: 'rgba(245, 233, 200, 0.5)' }}>Overall Score · {a2.summary.blocker_count} blockers</div>
           </div>
         </div>
       </div>
 
       {/* Diverging Bar Section */}
-      <div className="p-10" style={{ backgroundColor: '#1A1A1A', borderRadius: '32px', border: '1px solid #222222' }}>
+      <div className="p-10" style={{ backgroundColor: '#161616', borderRadius: '32px', border: '1px solid rgba(245, 233, 200, 0.15)' }}>
         <div className="flex justify-between items-center mb-8">
-          <LabelCaps style={{ color: '#888888' }}>Cluster-by-Cluster Comparison</LabelCaps>
+          <LabelCaps style={{ color: 'rgba(245, 233, 200, 0.5)' }}>Cluster-by-Cluster Comparison</LabelCaps>
           <div className="flex gap-6 text-[12px]">
             <div className="flex items-center gap-2">
               <span className="w-3 h-3 rounded-sm" style={{ backgroundColor: '#F5E9C8' }} />
-              <span style={{ color: '#CCCCCC' }}>{sys1.name} leads</span>
+              <span style={{ color: 'rgba(245, 233, 200, 0.8)' }}>{sys1.name} leads</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-sm" style={{ backgroundColor: '#888888' }} />
-              <span style={{ color: '#CCCCCC' }}>{sys2.name} leads</span>
+              <span className="w-3 h-3 rounded-sm" style={{ backgroundColor: 'rgba(245, 233, 200, 0.5)' }} />
+              <span style={{ color: 'rgba(245, 233, 200, 0.8)' }}>{sys2.name} leads</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="w-3 h-3 rounded-sm" style={{ backgroundColor: '#444444' }} />
-              <span style={{ color: '#CCCCCC' }}>Tied / Neutral</span>
+              <span style={{ color: 'rgba(245, 233, 200, 0.8)' }}>Tied / Neutral</span>
             </div>
           </div>
         </div>
@@ -232,7 +232,7 @@ export default function Benchmark({ systems }: { systems: AuditSystem[] }) {
         />
         <ProfileCard
           system={sys2}
-          color="#888888"
+          color="rgba(245, 233, 200, 0.5)"
           leads={[
             ...sys2Leads.map(c => ({
               label: c.label,
@@ -248,23 +248,23 @@ export default function Benchmark({ systems }: { systems: AuditSystem[] }) {
         />
       </div>
 
-      {/* Shared Blockers */}
+      {/* Shared Priorities */}
       {sharedBlockers.length > 0 && (
-        <div className="p-8" style={{ backgroundColor: '#1A1A1A', borderRadius: '28px', border: '1px solid #222222' }}>
+        <div className="p-8" style={{ backgroundColor: '#161616', borderRadius: '28px', border: '1px solid rgba(245, 233, 200, 0.15)' }}>
           <div className="flex items-center gap-4 mb-6">
-            <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(229, 161, 88, 0.1)', border: '1px solid rgba(229, 161, 88, 0.2)' }}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E5A158" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-                <line x1="12" y1="9" x2="12" y2="13" />
-                <line x1="12" y1="17" x2="12.01" y2="17" />
+            <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(245, 166, 35, 0.1)', border: '1px solid rgba(245, 166, 35, 0.2)' }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F5A623" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
               </svg>
             </div>
-            <h3 className="text-xl font-medium m-0" style={{ color: '#E5A158' }}>Shared Blockers ({sharedBlockers.length})</h3>
+            <h3 className="text-xl font-medium m-0" style={{ color: '#F5A623' }}>Shared Priorities ({sharedBlockers.length})</h3>
           </div>
           <div className="grid grid-cols-2 gap-x-8 gap-y-4">
             {sharedBlockers.map(b => (
               <div key={b.id} className="flex items-start gap-3">
-                <span className="text-[14px]" style={{ color: '#CCCCCC' }}>{b.summary}</span>
+                <span className="text-[14px]" style={{ color: 'rgba(245, 233, 200, 0.8)' }}>{b.summary}</span>
               </div>
             ))}
           </div>

@@ -31,7 +31,14 @@ function QuickWinItem({ item, isFirst, isLast, onClick }: {
       style={{ borderColor: 'rgba(245, 233, 200, 0.1)' }}
       onClick={onClick}
     >
-      <h3 className="text-[16px] leading-relaxed font-medium mb-4 m-0" style={{ color: 'white' }}>{item.action}</h3>
+      <h3 className="text-[16px] leading-relaxed font-medium mb-4 m-0" style={{ color: 'white' }}>
+        {item.action_type && (
+          <span className="text-[11px] uppercase tracking-wider font-medium mr-2" style={{ opacity: 0.5 }}>
+            {item.action_type.charAt(0).toUpperCase() + item.action_type.slice(1)}:
+          </span>
+        )}
+        {item.action}
+      </h3>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <CategoryBadge category={item.ownership} />
@@ -57,7 +64,14 @@ function FoundationalItem({ item, isFirst, isLast, onClick }: {
       style={{ borderColor: 'rgba(245, 233, 200, 0.1)' }}
       onClick={onClick}
     >
-      <h3 className="text-[18px] leading-snug font-medium mb-5 m-0 pr-10" style={{ color: 'white' }}>{item.action}</h3>
+      <h3 className="text-[18px] leading-snug font-medium mb-5 m-0 pr-10" style={{ color: 'white' }}>
+        {item.action_type && (
+          <span className="text-[11px] uppercase tracking-wider font-medium mr-2" style={{ opacity: 0.5 }}>
+            {item.action_type.charAt(0).toUpperCase() + item.action_type.slice(1)}:
+          </span>
+        )}
+        {item.action}
+      </h3>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <CategoryBadge category={item.ownership} />
@@ -82,7 +96,14 @@ function PostMigrationItem({ item, onClick }: { item: RemediationItem; onClick: 
       onClick={onClick}
     >
       <div className="flex flex-col gap-2">
-        <h3 className="text-[15px] font-medium m-0" style={{ color: '#F5E9C8' }}>{item.action}</h3>
+        <h3 className="text-[15px] font-medium m-0" style={{ color: '#F5E9C8' }}>
+          {item.action_type && (
+            <span className="text-[11px] uppercase tracking-wider font-medium mr-2" style={{ opacity: 0.5 }}>
+              {item.action_type.charAt(0).toUpperCase() + item.action_type.slice(1)}:
+            </span>
+          )}
+          {item.action}
+        </h3>
         <div className="flex items-center gap-3">
           <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded" style={{ border: '1px solid rgba(245, 233, 200, 0.2)', color: 'rgba(245, 233, 200, 0.6)' }}>
             {item.ownership}
@@ -146,7 +167,7 @@ export default function Remediation({ system }: { system: AuditSystem }) {
 
       <div className="grid grid-cols-12 gap-8">
         {/* Quick Wins */}
-        <section className="col-span-5 p-10 flex flex-col" style={{ backgroundColor: '#1A1A1A', borderRadius: '32px' }}>
+        <section className="col-span-5 p-10 flex flex-col" style={{ backgroundColor: '#161616', borderRadius: '32px' }}>
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-3">
               <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: '#4ADE80', boxShadow: '0 0 10px rgba(74,222,128,0.4)' }} />
@@ -166,7 +187,7 @@ export default function Remediation({ system }: { system: AuditSystem }) {
         </section>
 
         {/* Foundational Blockers */}
-        <section className="col-span-7 p-10 flex flex-col" style={{ backgroundColor: '#1A1A1A', borderRadius: '32px' }}>
+        <section className="col-span-7 p-10 flex flex-col" style={{ backgroundColor: '#161616', borderRadius: '32px' }}>
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-3">
               <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: '#F5A623', boxShadow: '0 0 10px rgba(245,166,35,0.4)' }} />

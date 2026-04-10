@@ -29,14 +29,20 @@ export default function ClusterDetail({ system, dimensionRef }: {
   const remItems = remediationForCluster(remediation.items, clusterId).map(i => getMergedRemItem(i, editorial))
   const clusterNum = clusterDisplayNumber(clusterId)
 
-  // Sort dimensions: blockers first, then by key
-  const dimEntries = Object.entries(cluster.dimensions).sort((a, b) => {
-    const sevOrder: Record<string, number> = { blocker: 0, warning: 1, note: 2, pass: 3 }
-    const sa = sevOrder[a[1].severity ?? 'pass'] ?? 4
-    const sb = sevOrder[b[1].severity ?? 'pass'] ?? 4
-    if (sa !== sb) return sa - sb
-    return a[0].localeCompare(b[0])
-  })
+  // Sort dimensions: grouped by tier (score_max=4 → Tier 1 structural, score_max=2 → Tier 2 heuristic),
+  // then within each tier by severity descending, then alphabetically.
+  const sevOrder: Record<string, number> = { blocker: 0, warning: 1, note: 2, pass: 3 }
+  const sortBySeverity = (entries: [string, typeof cluster.dimensions[string]][]) =>
+    [...entries].sort((a, b) => {
+      const sa = sevOrder[a[1].severity ?? 'pass'] ?? 4
+      const sb = sevOrder[b[1].severity ?? 'pass'] ?? 4
+      if (sa !== sb) return sa - sb
+      return a[0].localeCompare(b[0])
+    })
+
+  const allDimEntries = Object.entries(cluster.dimensions)
+  const tier1Entries = sortBySeverity(allDimEntries.filter(([, d]) => d.score_max === 4))
+  const tier2Entries = sortBySeverity(allDimEntries.filter(([, d]) => d.score_max === 2))
 
   return (
     <div className="w-full">
@@ -80,7 +86,51 @@ export default function ClusterDetail({ system, dimensionRef }: {
             </tr>
           </thead>
           <tbody>
-            {dimEntries.map(([dimKey, dim]) => {
+            {tier1Entries.map(([dimKey, dim]) => {
+              const ref = dimensionRef.dimensions[dimKey]
+              const name = ref?.name ?? dimKey.replace(/^\d+\.\d+_/, '').replace(/_/g, ' ')
+              const scoreLabel = dim.score !== null ? `${dim.score}/${dim.score_max}` : 'N/A'
+              const color = severityColor(dim.severity)
+              const findingCount = dim.finding_ids.length
+
+              return (
+                <tr
+                  key={dimKey}
+                  className="cursor-pointer"
+                  style={{ borderBottom: '1px solid rgba(245, 233, 200, 0.05)' }}
+                  onClick={() => navigate(`/dimension/${dimKey}`)}
+                >
+                  <td className="p-4">
+                    <div className="flex items-center gap-3">
+                      <SeverityDot severity={dim.severity} size={8} />
+                      <span className="text-[14px] font-medium">{name}</span>
+                    </div>
+                  </td>
+                  <td className="text-center p-4">
+                    <span className="text-[14px] font-medium" style={{ color }}>{scoreLabel}</span>
+                  </td>
+                  <td className="text-center p-4">
+                    <SeverityBadge severity={dim.severity} />
+                  </td>
+                  <td className="text-center p-4">
+                    <span className="text-[14px]" style={{ opacity: findingCount > 0 ? 1 : 0.3 }}>{findingCount}</span>
+                  </td>
+                  <td className="p-4 text-right">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ opacity: 0.3 }}>
+                      <path d="M9 18l6-6-6-6" />
+                    </svg>
+                  </td>
+                </tr>
+              )
+            })}
+            {tier1Entries.length > 0 && tier2Entries.length > 0 && (
+              <tr>
+                <td colSpan={5} className="px-4 py-2" style={{ backgroundColor: '#0B0B0B', borderBottom: '1px solid rgba(245, 233, 200, 0.05)' }}>
+                  <LabelCaps>Heuristic</LabelCaps>
+                </td>
+              </tr>
+            )}
+            {tier2Entries.map(([dimKey, dim]) => {
               const ref = dimensionRef.dimensions[dimKey]
               const name = ref?.name ?? dimKey.replace(/^\d+\.\d+_/, '').replace(/_/g, ' ')
               const scoreLabel = dim.score !== null ? `${dim.score}/${dim.score_max}` : 'N/A'
@@ -162,7 +212,14 @@ export default function ClusterDetail({ system, dimensionRef }: {
                       {item.ownership} · {item.effort_estimate}
                     </span>
                   </div>
-                  <p className="text-[14px] font-medium m-0">{item.action}</p>
+                  <p className="text-[14px] font-medium m-0">
+                    {item.action_type && (
+                      <span className="text-[11px] uppercase tracking-wider font-medium mr-2" style={{ opacity: 0.5 }}>
+                        {item.action_type.charAt(0).toUpperCase() + item.action_type.slice(1)}:
+                      </span>
+                    )}
+                    {item.action}
+                  </p>
                   {item.projected_score_improvement && (
                     <p className="text-[12px] mt-2 m-0" style={{ opacity: 0.5 }}>{item.projected_score_improvement}</p>
                   )}
