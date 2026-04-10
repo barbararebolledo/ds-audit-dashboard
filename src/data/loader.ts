@@ -212,9 +212,25 @@ export function scoreToSeverity(score: number | null, scoreMax: number): Severit
   return 'pass'
 }
 
+/** Tier definition with editorial override and hardcoded fallback. */
+const TIER_DEFAULTS: Record<number, { label: string; effort: string }> = {
+  1: { label: 'Quick Wins', effort: 'Hours–Days' },
+  2: { label: 'Foundational Blockers', effort: 'Days–Weeks' },
+  3: { label: 'Post-Migration', effort: 'Weeks' },
+}
+
+export function tierDef(tier: 1 | 2 | 3, editorial: EditorialJSON): { label: string; effort: string } {
+  const ed = editorial.tiers?.[String(tier) as '1' | '2' | '3']
+  const defaults = TIER_DEFAULTS[tier]
+  return {
+    label: ed?.label ?? defaults.label,
+    effort: ed?.effort ?? defaults.effort,
+  }
+}
+
 /** Readiness label. */
 export const READINESS_LABELS: Record<string, string> = {
-  not_ready: 'Not ready for AI-assisted workflows',
+  not_ready: 'Not AI ready',
   conditional_pass: 'Conditionally ready',
   pass: 'Ready for AI-assisted workflows',
 }

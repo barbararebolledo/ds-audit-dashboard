@@ -7,26 +7,50 @@ import {
   remediationByTier,
   clusterDisplayNumber,
   getMergedFinding,
+  tierDef,
 } from '../data/loader'
 import { LabelCaps, BlockerCard, DimensionScoreCard } from '../components'
 
-function RemediationSummaryItem({ color, label, effort, count, borderBottom, dimmed }: {
-  color: string; label: string; effort: string; count: number; borderBottom: boolean; dimmed: boolean
+function RemediationSummaryItem({ color, label, effort, count, isLast, dimmed }: {
+  color: string; label: string; effort: string; count: number; isLast: boolean; dimmed: boolean
 }) {
   return (
-    <div className="flex items-center justify-between py-4" style={borderBottom ? { borderBottom: '1px solid rgba(245, 233, 200, 0.1)' } : {}}>
-      <div>
-        <div className="flex items-center gap-3 mb-1">
-          <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: color, opacity: dimmed ? 0.3 : 1 }} />
-          <span className="text-[16px] font-medium" style={dimmed ? { opacity: 0.6 } : {}}>{label}</span>
+    <div>
+      <div className="flex items-start gap-3 py-5">
+        <div
+          className="shrink-0 rounded-full"
+          style={{
+            marginTop: 5,
+            width: 6,
+            height: 6,
+            backgroundColor: color,
+            opacity: dimmed ? 0.3 : 1,
+            boxShadow: dimmed ? 'none' : `0 0 8px ${color}88`,
+          }}
+        />
+        <div className="flex-1">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-[15px] font-medium" style={{ opacity: dimmed ? 0.5 : 1 }}>{label}</span>
+            <span
+              style={{
+                fontSize: 11,
+                fontFamily: 'JetBrains Mono, monospace',
+                color: dimmed ? 'rgba(245, 233, 200, 0.4)' : color,
+                backgroundColor: dimmed ? 'rgba(245, 233, 200, 0.05)' : `${color}18`,
+                border: `1px solid ${dimmed ? 'rgba(245, 233, 200, 0.12)' : `${color}40`}`,
+                padding: '1px 8px',
+                borderRadius: 4,
+              }}
+            >
+              {count}
+            </span>
+          </div>
+          <span className="text-[11px] uppercase tracking-widest" style={{ opacity: dimmed ? 0.3 : 0.45 }}>
+            Est. Effort: {effort}
+          </span>
         </div>
-        <span className="text-[11px] uppercase tracking-widest ml-5" style={{ opacity: dimmed ? 0.4 : 0.5 }}>
-          Est. Effort: {effort}
-        </span>
       </div>
-      <span className="text-[32px] font-medium" style={{ color: dimmed ? undefined : color, opacity: dimmed ? 0.4 : 1 }}>
-        {count}
-      </span>
+      {!isLast && <div style={{ height: 1, backgroundColor: 'rgba(245, 233, 200, 0.1)' }} />}
     </div>
   )
 }
@@ -64,7 +88,7 @@ export default function Overview({ system }: {
     ? 'Ready: AI tools can work with this system reliably.'
     : summary.phase_readiness === 'conditional_pass'
       ? 'Conditionally ready: some manual correction still required.'
-      : 'Not ready: AI tools will need significant human correction.'
+      : 'Not AI ready'
 
   return (
     <main className="grid grid-cols-12 gap-6 w-full">
@@ -91,14 +115,9 @@ export default function Overview({ system }: {
           </h1>
         </div>
         <div className="mt-12 flex flex-col gap-4">
-          <div className="flex items-end justify-between">
+          <div className="flex items-end">
             <div>
-              <LabelCaps className="mb-1">Target Design System</LabelCaps>
-              <p className="text-[20px] font-medium tracking-tight m-0">{audit.meta.system_name}</p>
-            </div>
-            <div className="text-right">
-              <LabelCaps className="mb-1">Audit Date</LabelCaps>
-              <p className="text-[14px] m-0" style={{ opacity: 0.6 }}>{audit.meta.audit_date}</p>
+              <p className="text-[20px] font-medium tracking-tight m-0">{audit.meta.system_name} v 1.0</p>
             </div>
           </div>
 
@@ -124,9 +143,9 @@ export default function Overview({ system }: {
           </svg>
         </div>
         <div className="flex flex-col flex-grow justify-center">
-          <RemediationSummaryItem color="#4ADE80" label="Quick Wins" effort="Hours–Days" count={tiers.tier1.length} borderBottom dimmed={false} />
-          <RemediationSummaryItem color="#F5A623" label="Foundational" effort="Days–Weeks" count={tiers.tier2.length} borderBottom dimmed={false} />
-          <RemediationSummaryItem color="#F5E9C8" label="Post-Migration" effort="Weeks" count={tiers.tier3.length} borderBottom={false} dimmed />
+          <RemediationSummaryItem color="#4ADE80" label={tierDef(1, editorial).label} effort={tierDef(1, editorial).effort} count={tiers.tier1.length} isLast={false} dimmed={false} />
+          <RemediationSummaryItem color="#F5A623" label={tierDef(2, editorial).label} effort={tierDef(2, editorial).effort} count={tiers.tier2.length} isLast={false} dimmed={false} />
+          <RemediationSummaryItem color="#F5E9C8" label={tierDef(3, editorial).label} effort={tierDef(3, editorial).effort} count={tiers.tier3.length} isLast dimmed />
         </div>
       </section>
 

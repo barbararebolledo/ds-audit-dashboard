@@ -19,7 +19,9 @@
   --color-blue: #4C8BFF;
 
   /* Borders */
-  --color-border-subtle: rgba(245, 233, 200, 0.1);
+  --color-border-default: rgba(245, 233, 200, 0.15);
+  --color-border-medium: rgba(245, 233, 200, 0.1);
+  --color-border-subtle: rgba(245, 233, 200, 0.05);
 
   /* Card radius */
   --radius-card: 32px;
@@ -109,4 +111,13 @@ input[type=range]::-moz-range-thumb {
 }
 .value-transition {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* OverviewV2 tab fade-in */
+@keyframes v2FadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.v2-fade-in {
+  animation: v2FadeIn 0.35s ease forwards;
 }

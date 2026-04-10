@@ -3,6 +3,7 @@ import type { AuditSystem } from '../data/types'
 
 const NAV_ITEMS = [
   { label: 'Overview', path: '/' },
+  { label: 'Overview 2', path: '/overview-v2' },
   { label: 'Roadmap', path: '/remediation' },
   { label: 'Impact', path: '/impact' },
   { label: 'Benchmark', path: '/benchmark' },

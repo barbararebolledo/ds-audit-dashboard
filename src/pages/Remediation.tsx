@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import type { AuditSystem, RemediationItem } from '../data/types'
-import { remediationByTier, getMergedRemItem } from '../data/loader'
+import { remediationByTier, getMergedRemItem, tierDef } from '../data/loader'
 import { FilterButton, ImpactBadge } from '../components'
 
 function ClockIcon({ size = 14 }: { size?: number }) {
@@ -138,6 +138,10 @@ export default function Remediation({ system }: { system: AuditSystem }) {
   const filteredT2 = tiers.tier2.filter(matchesFilter)
   const filteredT3 = tiers.tier3.filter(matchesFilter)
 
+  const t1 = tierDef(1, editorial)
+  const t2 = tierDef(2, editorial)
+  const t3 = tierDef(3, editorial)
+
   const goToDimension = (item: RemediationItem) => {
     if (item.affected_dimensions.length > 0) {
       navigate(`/dimension/${item.affected_dimensions[0]}`)
@@ -171,7 +175,7 @@ export default function Remediation({ system }: { system: AuditSystem }) {
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-3">
               <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: '#4ADE80', boxShadow: '0 0 10px rgba(74,222,128,0.4)' }} />
-              <h2 className="text-[11px] uppercase tracking-[0.08em] font-medium m-0" style={{ color: 'rgba(245, 233, 200, 0.9)' }}>Quick Wins</h2>
+              <h2 className="text-[11px] uppercase tracking-[0.08em] font-medium m-0" style={{ color: 'rgba(245, 233, 200, 0.9)' }}>{t1.label}</h2>
             </div>
             <span className="text-[11px] uppercase tracking-widest" style={{ color: 'rgba(245, 233, 200, 0.4)' }}>{filteredT1.length} Actions</span>
           </div>
@@ -191,7 +195,7 @@ export default function Remediation({ system }: { system: AuditSystem }) {
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-3">
               <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: '#F5A623', boxShadow: '0 0 10px rgba(245,166,35,0.4)' }} />
-              <h2 className="text-[11px] uppercase tracking-[0.08em] font-medium m-0" style={{ color: 'rgba(245, 233, 200, 0.9)' }}>Foundational</h2>
+              <h2 className="text-[11px] uppercase tracking-[0.08em] font-medium m-0" style={{ color: 'rgba(245, 233, 200, 0.9)' }}>{t2.label}</h2>
             </div>
             <span className="text-[11px] uppercase tracking-widest" style={{ color: 'rgba(245, 233, 200, 0.4)' }}>{filteredT2.length} Actions</span>
           </div>
@@ -211,7 +215,7 @@ export default function Remediation({ system }: { system: AuditSystem }) {
           <div className="flex items-center justify-between mb-8" style={{ opacity: 0.6 }}>
             <div className="flex items-center gap-3">
               <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: 'rgba(245, 233, 200, 0.3)' }} />
-              <h2 className="text-[11px] uppercase tracking-[0.08em] font-medium m-0" style={{ color: '#F5E9C8' }}>Post-Migration</h2>
+              <h2 className="text-[11px] uppercase tracking-[0.08em] font-medium m-0" style={{ color: '#F5E9C8' }}>{t3.label}</h2>
             </div>
             <span className="text-[11px] uppercase tracking-widest" style={{ color: 'rgba(245, 233, 200, 0.7)' }}>{filteredT3.length} Actions</span>
           </div>

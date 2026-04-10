@@ -112,12 +112,22 @@ export interface RemediationJSON {
 
 // ── Editorial JSON (schema v1.0) ──
 
+export interface TierDefinition {
+  label?: string
+  effort?: string
+}
+
 export interface EditorialJSON {
   meta: { schema_version: string; audit_ref: string }
   report?: {
     title?: string
     executive_summary?: string
     methodology_note?: string
+  }
+  tiers?: {
+    '1'?: TierDefinition
+    '2'?: TierDefinition
+    '3'?: TierDefinition
   }
   clusters?: Record<string, { narrative?: string; value_framing?: string }>
   dimensions?: Record<string, { narrative?: string }>
