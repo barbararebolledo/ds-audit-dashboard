@@ -214,9 +214,9 @@ export function scoreToSeverity(score: number | null, scoreMax: number): Severit
 
 /** Tier definition with editorial override and hardcoded fallback. */
 const TIER_DEFAULTS: Record<number, { label: string; effort: string }> = {
-  1: { label: 'Quick Wins', effort: 'Hours–Days' },
-  2: { label: 'Foundational Blockers', effort: 'Days–Weeks' },
-  3: { label: 'Post-Migration', effort: 'Weeks' },
+  1: { label: 'Tier 1', effort: 'Hours–Days' },
+  2: { label: 'Tier 2', effort: 'Days–Weeks' },
+  3: { label: 'Tier 3', effort: 'Weeks' },
 }
 
 export function tierDef(tier: 1 | 2 | 3, editorial: EditorialJSON): { label: string; effort: string } {

@@ -9,6 +9,7 @@ import {
   getMergedFinding,
   getMergedRemItem,
   severityColor,
+  tierDef,
 } from '../data/loader'
 import { LabelCaps, Breadcrumbs, SeverityBadge, SeverityDot } from '../components'
 
@@ -146,7 +147,7 @@ export default function DimensionDetail({ system, dimensionRef }: {
               <div key={item.id} className="p-6" style={{ backgroundColor: '#161616', borderRadius: '24px' }}>
                 <div className="flex items-center gap-3 mb-2">
                   <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded" style={{ border: '1px solid rgba(245, 233, 200, 0.15)', opacity: 0.6 }}>
-                    {item.priority_tier === 1 ? 'Quick Win' : item.priority_tier === 2 ? 'Foundational' : 'Post-Migration'} · {item.ownership} · {item.effort_estimate}
+                    {tierDef(item.priority_tier, editorial).label} · {item.ownership} · {item.effort_estimate}
                   </span>
                 </div>
                 <p className="text-[14px] font-medium m-0 mb-2">

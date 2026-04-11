@@ -4,11 +4,11 @@ import {
   CLUSTER_ORDER,
   clusterNarrative,
   resolveTopBlockers,
-  remediationByTier,
   clusterDisplayNumber,
   getMergedFinding,
   tierDef,
 } from '../data/loader'
+import { TIER_VISUAL_META, TIER_NUMBERS } from '../data/tierMeta'
 import { LabelCaps, BlockerCard, DimensionScoreCard } from '../components'
 
 function RemediationSummaryItem({ color, label, effort, count, isLast, dimmed }: {
@@ -63,7 +63,6 @@ export default function Overview({ system }: {
   const { summary } = audit
 
   const topBlockers = resolveTopBlockers(audit).map(f => getMergedFinding(f, editorial))
-  const tiers = remediationByTier(remediation.items)
 
   // Build cluster cards data
   const clusterEntries = CLUSTER_ORDER
@@ -143,9 +142,22 @@ export default function Overview({ system }: {
           </svg>
         </div>
         <div className="flex flex-col flex-grow justify-center">
-          <RemediationSummaryItem color="#4ADE80" label={tierDef(1, editorial).label} effort={tierDef(1, editorial).effort} count={tiers.tier1.length} isLast={false} dimmed={false} />
-          <RemediationSummaryItem color="#F5A623" label={tierDef(2, editorial).label} effort={tierDef(2, editorial).effort} count={tiers.tier2.length} isLast={false} dimmed={false} />
-          <RemediationSummaryItem color="#F5E9C8" label={tierDef(3, editorial).label} effort={tierDef(3, editorial).effort} count={tiers.tier3.length} isLast dimmed />
+          {TIER_NUMBERS.map((tierNum, i) => {
+            const meta = TIER_VISUAL_META[tierNum]
+            const def = tierDef(tierNum as 1 | 2 | 3, editorial)
+            const count = remediation.items.filter(item => item.priority_tier === tierNum).length
+            return (
+              <RemediationSummaryItem
+                key={tierNum}
+                color={meta.color}
+                label={def.label}
+                effort={def.effort}
+                count={count}
+                isLast={i === TIER_NUMBERS.length - 1}
+                dimmed={meta.dimmed}
+              />
+            )
+          })}
         </div>
       </section>
 
