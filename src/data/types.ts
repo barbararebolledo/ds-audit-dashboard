@@ -114,7 +114,7 @@ export interface RemediationJSON {
 
 export interface TierDefinition {
   label?: string
-  effort?: string
+  value_framing?: string
 }
 
 export interface EditorialJSON {

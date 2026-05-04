@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import type { AuditSystem, RemediationItem } from '../data/types'
 import type { DensityVariant } from '../data/tierMeta'
-import { getMergedRemItem, sortRemediation, tierDef } from '../data/loader'
+import { getMergedRemItem, sortRemediation, tierDef, tierValueFraming } from '../data/loader'
 import { TIER_VISUAL_META, TIER_NUMBERS } from '../data/tierMeta'
 import { FilterButton, ImpactBadge } from '../components'
 
@@ -153,6 +153,7 @@ export default function Remediation({ system }: { system: AuditSystem }) {
         {TIER_NUMBERS.map(tierNum => {
           const meta = TIER_VISUAL_META[tierNum]
           const def = tierDef(tierNum as 1 | 2 | 3, editorial)
+          const valueFraming = tierValueFraming(tierNum as 1 | 2 | 3, editorial)
           const items = sortRemediation(
             merged.filter(i => i.priority_tier === tierNum).filter(matchesFilter)
           )
@@ -168,7 +169,7 @@ export default function Remediation({ system }: { system: AuditSystem }) {
               style={{ ...sectionStyle, gridColumn: `span ${meta.colSpan}` }}
             >
               <div
-                className="flex items-center justify-between mb-8"
+                className="flex items-center justify-between mb-6"
                 style={meta.headerDimmed ? { opacity: 0.6 } : undefined}
               >
                 <div className="flex items-center gap-3">
@@ -194,6 +195,18 @@ export default function Remediation({ system }: { system: AuditSystem }) {
                   {items.length} Actions
                 </span>
               </div>
+              {valueFraming && (
+                <p
+                  className="text-[14px] leading-relaxed mb-8 m-0"
+                  style={{
+                    color: 'rgba(245, 233, 200, 0.7)',
+                    maxWidth: '72ch',
+                    opacity: meta.headerDimmed ? 0.7 : 1,
+                  }}
+                >
+                  {valueFraming}
+                </p>
+              )}
               <div className={meta.itemsLayout === 'grid-2' ? 'grid grid-cols-2 gap-x-12' : 'flex flex-col'}>
                 {items.length === 0 ? (
                   <p

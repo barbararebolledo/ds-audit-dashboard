@@ -212,20 +212,47 @@ export function scoreToSeverity(score: number | null, scoreMax: number): Severit
   return 'pass'
 }
 
-/** Tier definition with editorial override and hardcoded fallback. */
-const TIER_DEFAULTS: Record<number, { label: string; effort: string }> = {
-  1: { label: 'Tier 1', effort: 'Hours–Days' },
-  2: { label: 'Tier 2', effort: 'Days–Weeks' },
-  3: { label: 'Tier 3', effort: 'Weeks' },
+/** Tier label with editorial override and hardcoded fallback. */
+const TIER_LABEL_DEFAULTS: Record<number, string> = {
+  1: 'Tier 1',
+  2: 'Tier 2',
+  3: 'Tier 3',
 }
 
-export function tierDef(tier: 1 | 2 | 3, editorial: EditorialJSON): { label: string; effort: string } {
+export function tierDef(tier: 1 | 2 | 3, editorial: EditorialJSON): { label: string } {
   const ed = editorial.tiers?.[String(tier) as '1' | '2' | '3']
-  const defaults = TIER_DEFAULTS[tier]
   return {
-    label: ed?.label ?? defaults.label,
-    effort: ed?.effort ?? defaults.effort,
+    label: ed?.label ?? TIER_LABEL_DEFAULTS[tier],
   }
+}
+
+/** Editorial value_framing string for a tier, if present. */
+export function tierValueFraming(tier: 1 | 2 | 3, editorial: EditorialJSON): string | undefined {
+  return editorial.tiers?.[String(tier) as '1' | '2' | '3']?.value_framing
+}
+
+/** Categorical breakdown of effort estimates for items in a given tier.
+ *  Produces strings like "1 hour · 2 days · 2 weeks". Empty string when no items. */
+const EFFORT_LABEL: Record<RemediationItem['effort_estimate'], { singular: string; plural: string }> = {
+  hours: { singular: 'hour', plural: 'hours' },
+  days: { singular: 'day', plural: 'days' },
+  weeks: { singular: 'week', plural: 'weeks' },
+}
+const EFFORT_DISPLAY_ORDER: RemediationItem['effort_estimate'][] = ['hours', 'days', 'weeks']
+
+export function tierTotalEffort(items: RemediationItem[], tier: 1 | 2 | 3): string {
+  const counts: Record<RemediationItem['effort_estimate'], number> = { hours: 0, days: 0, weeks: 0 }
+  for (const item of items) {
+    if (item.priority_tier === tier) counts[item.effort_estimate] += 1
+  }
+  return EFFORT_DISPLAY_ORDER
+    .filter(bucket => counts[bucket] > 0)
+    .map(bucket => {
+      const n = counts[bucket]
+      const lbl = EFFORT_LABEL[bucket]
+      return `${n} ${n === 1 ? lbl.singular : lbl.plural}`
+    })
+    .join(' · ')
 }
 
 /** Readiness label. */

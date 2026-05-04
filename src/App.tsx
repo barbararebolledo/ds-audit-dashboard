@@ -9,7 +9,6 @@ import Impact from './pages/Impact'
 import ClusterDetail from './pages/ClusterDetail'
 import DimensionDetail from './pages/DimensionDetail'
 import FindingList from './pages/FindingList'
-import OverviewV2 from './pages/OverviewV2'
 
 const appData = loadAppData()
 
@@ -34,7 +33,6 @@ export default function App() {
             <Route path="/cluster/:clusterId" element={<ClusterDetail system={selectedSystem} dimensionRef={appData.dimensionRef} />} />
             <Route path="/dimension/:dimensionId" element={<DimensionDetail system={selectedSystem} dimensionRef={appData.dimensionRef} />} />
             <Route path="/findings" element={<FindingList system={selectedSystem} />} />
-            <Route path="/overview-v2" element={<OverviewV2 system={selectedSystem} />} />
           </Routes>
         </div>
       </div>

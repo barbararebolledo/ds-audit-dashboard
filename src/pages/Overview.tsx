@@ -7,6 +7,7 @@ import {
   clusterDisplayNumber,
   getMergedFinding,
   tierDef,
+  tierTotalEffort,
 } from '../data/loader'
 import { TIER_VISUAL_META, TIER_NUMBERS } from '../data/tierMeta'
 import { LabelCaps, BlockerCard, DimensionScoreCard } from '../components'
@@ -145,14 +146,14 @@ export default function Overview({ system }: {
           {TIER_NUMBERS.map((tierNum, i) => {
             const meta = TIER_VISUAL_META[tierNum]
             const def = tierDef(tierNum as 1 | 2 | 3, editorial)
-            const count = remediation.items.filter(item => item.priority_tier === tierNum).length
+            const tierItems = remediation.items.filter(item => item.priority_tier === tierNum)
             return (
               <RemediationSummaryItem
                 key={tierNum}
                 color={meta.color}
                 label={def.label}
-                effort={def.effort}
-                count={count}
+                effort={tierTotalEffort(remediation.items, tierNum as 1 | 2 | 3)}
+                count={tierItems.length}
                 isLast={i === TIER_NUMBERS.length - 1}
                 dimmed={meta.dimmed}
               />
