@@ -74,7 +74,7 @@ export default function DimensionDetail({ system, dimensionRef }: {
       {ref && (
         <div className="p-8 mb-8" style={{ backgroundColor: '#161616', borderRadius: '24px' }}>
           <LabelCaps className="mb-3">What This Measures</LabelCaps>
-          <p className="text-[15px] leading-relaxed m-0" style={{ opacity: 0.7 }}>{ref.description}</p>
+          <p className="text-[15px] leading-relaxed m-0" style={{ opacity: 0.7 }}>{ref.plain_description}</p>
           {ref.evidence_sources.length > 0 && (
             <div className="mt-4 flex gap-2">
               {ref.evidence_sources.map(s => (

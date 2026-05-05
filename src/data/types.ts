@@ -110,15 +110,32 @@ export interface RemediationJSON {
   items: RemediationItem[]
 }
 
-// ── Editorial JSON (schema v1.0) ──
+// ── Editorial JSON (schema v1.1) ──
 
 export interface TierDefinition {
   label?: string
   value_framing?: string
 }
 
+export interface OrgImplicationPattern {
+  pattern_name: string
+  cluster_or_dimension_reference: string
+  score_value: string
+  supporting_observation: string
+  artefact_pattern_described: string
+  organisational_implication: string
+}
+
+export interface OrgImplications {
+  opening: string
+  patterns: OrgImplicationPattern[]
+  closing: string
+}
+
 export interface EditorialJSON {
   meta: { schema_version: string; audit_ref: string }
+  scope_statement?: string
+  organisational_implications?: OrgImplications
   report?: {
     title?: string
     executive_summary?: string
@@ -141,6 +158,7 @@ export interface DimensionRefEntry {
   name: string
   cluster: string
   description: string
+  plain_description: string
   evidence_sources: string[]
   score_levels: Record<string, string>
 }
