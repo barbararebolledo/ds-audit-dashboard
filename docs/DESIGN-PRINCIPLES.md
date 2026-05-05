@@ -165,9 +165,14 @@ Don't: "This dimension has some room for improvement."
 
 ---
 
-## Related files
+## How these principles connect to the other documents
 
-- `DESIGN-SPEC.md` -- implementation spec (tokens, components, layout, interaction patterns). Governed by these principles.
-- `CONTENT-EDITING.md` -- editorial workflow. Uses the tone of voice principles as the writing standard.
+This file defines the voice, values, and structural model (three depths, four principles, five tone rules). Three companion documents implement them:
+
+- `CONTENT-ARCHITECTURE.md` -- the story structure. Defines what each page says, in what order, at what level of prominence, and for whom. The three-depth model above maps to pages and sections in that document. Read it to understand how the principles become a page-by-page content plan.
+- `CONTENT-EDITING.md` -- the editorial brief. Defines what each content field is for, what register to write in, what good and bad copy looks like, and maximum lengths. Uses the tone of voice rules from this document as the quality standard.
+- `DESIGN-SPEC.md` -- the visual implementation. Tokens, components, layout, interaction patterns. Governed by the design principles above. Read it for how things look; read CONTENT-ARCHITECTURE.md for what things say.
+
+Source references:
 - `Thinking-track/Frameworks/impact-model.md` -- source of truth for impact calculator formulas and category definitions.
 - `Thinking-track/Thesis/core-hypothesis.md` -- the intellectual foundation: why intent documentation matters for AI readiness.

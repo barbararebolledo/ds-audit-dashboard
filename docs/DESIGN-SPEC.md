@@ -1,10 +1,12 @@
 # DESIGN-SPEC.md
 # ds-audit-dashboard -- Design Specification
 
-Last updated: 2026-04-09
-Status: Active -- reflects confirmed decisions from ADR 011 session
+Last updated: 2026-04-14
+Status: Active -- reflects confirmed decisions from ADR 011 session. Overview and impact sections updated per CONTENT-ARCHITECTURE.md (2026-04-14).
 Affects: all pages, component patterns, layout structure
 Governed by: DESIGN-PRINCIPLES.md (design principles and tone of voice)
+Content structure: CONTENT-ARCHITECTURE.md (story structure, section purposes, content specs per field)
+Editorial brief: CONTENT-EDITING.md (per-field writing specs, register assignments, examples)
 
 ---
 
@@ -160,14 +162,18 @@ Each card:
 
 ---
 
-## Page: Impact Calculator
+## Panel: Impact Calculator
 
 **Decision source:** ADR 011, C1-C5. Impact model: Thinking-track/Frameworks/impact-model.md.
-**Status:** Complete redesign from previous version.
+**Status:** Architectural change (2026-04-14). Previously a standalone page. Now an interactive panel accessible from the overview and remediation pages. See CONTENT-ARCHITECTURE.md for the narrative rationale.
 
 ### Purpose
 
-The client enters their team context. The page projects the annual cost of unresolved design system gaps across four impact categories, using formulas driven by audit scores and client inputs. All calculations update in real time.
+The client enters their team context. The panel projects the annual cost of unresolved design system gaps across four impact categories, using formulas driven by audit scores and client inputs. All calculations update in real time.
+
+### Access
+
+Triggered from the overview page (Section 3, "What is it costing you?") and the remediation page (near the headline impact number). Renders as a slide-out drawer, modal, or expandable panel -- implementation to be refined. The key requirement: it must not break the reading flow. The reader opens it, adjusts numbers, closes it, and the headline impact numbers on the overview and remediation pages update to reflect the custom inputs.
 
 ### Layout
 
