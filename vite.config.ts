@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
-      '@audit': path.resolve(__dirname, '../ds-ai-audit'),
+      '@audit': path.resolve(__dirname, 'src/data/audit-data'),
     },
   },
   server: {

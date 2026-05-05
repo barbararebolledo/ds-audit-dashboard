@@ -20,7 +20,7 @@
     /* Paths */
     "baseUrl": ".",
     "paths": {
-      "@audit/*": ["../ds-ai-audit/*"]
+      "@audit/*": ["src/data/audit-data/*"]
     },
 
     /* Linting */
