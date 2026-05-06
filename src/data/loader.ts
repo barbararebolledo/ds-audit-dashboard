@@ -11,6 +11,7 @@ import type {
   ClusterAudit,
   DimensionAudit,
   Severity,
+  OrgImplications,
 } from './types'
 
 // ── Static JSON imports from sibling repo ──
@@ -260,6 +261,34 @@ export const READINESS_LABELS: Record<string, string> = {
   not_ready: 'Not AI ready',
   conditional_pass: 'Conditionally ready',
   pass: 'Ready for AI-assisted workflows',
+}
+
+/** Readiness label as used inside scope_statement prose ("the artefact is at X for AI consumption"). */
+const SCOPE_READINESS_LABELS: Record<string, string> = {
+  not_ready: 'not ready',
+  conditional_pass: 'conditionally ready',
+  pass: 'ready',
+}
+
+/**
+ * Return scope_statement with {overall_score} and {phase_readiness} interpolated.
+ * Returns undefined if the field is absent.
+ */
+export function interpolatedScopeStatement(
+  editorial: EditorialJSON,
+  overallScore: number,
+  phaseReadiness: string,
+): string | undefined {
+  const text = editorial.scope_statement
+  if (!text) return undefined
+  return text
+    .replace('{overall_score}', overallScore.toFixed(1))
+    .replace('{phase_readiness}', SCOPE_READINESS_LABELS[phaseReadiness] ?? phaseReadiness.replace(/_/g, ' '))
+}
+
+/** Return organisational_implications if present. */
+export function orgImplications(editorial: EditorialJSON): OrgImplications | undefined {
+  return editorial.organisational_implications
 }
 
 /** Cluster display number (for the UI, 0-indexed → 1-indexed). */

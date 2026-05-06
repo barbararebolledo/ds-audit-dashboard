@@ -8,6 +8,8 @@ import {
   getMergedFinding,
   tierDef,
   tierTotalEffort,
+  interpolatedScopeStatement,
+  orgImplications,
 } from '../data/loader'
 import { TIER_VISUAL_META, TIER_NUMBERS } from '../data/tierMeta'
 import { LabelCaps, BlockerCard, DimensionScoreCard } from '../components'
@@ -81,6 +83,9 @@ export default function Overview({ system }: {
         description: clusterNarrative(cluster, key, editorial),
       }
     })
+
+  const scopeText = interpolatedScopeStatement(editorial, summary.overall_score, summary.phase_readiness)
+  const oi = orgImplications(editorial)
 
   // Readiness badge
   const readinessColor = summary.phase_readiness === 'pass' ? '#4ADE80' : summary.phase_readiness === 'conditional_pass' ? '#F5A623' : '#FF6B6B'
@@ -185,6 +190,48 @@ export default function Overview({ system }: {
           })}
         </div>
       </div>
+
+      {/* Scope Statement */}
+      {scopeText && (
+        <section className="col-span-12 mt-6 p-10" style={{ backgroundColor: '#161616', borderRadius: '32px' }}>
+          <LabelCaps className="mb-6">What this audit measures and does not measure</LabelCaps>
+          <div className="max-w-[80ch] flex flex-col gap-4">
+            {scopeText.split('\n\n').map((para, i) => (
+              <p key={i} className="text-[13px] leading-relaxed m-0" style={{ opacity: 0.75 }}>{para}</p>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Organisational Implications */}
+      {oi && (
+        <div className="col-span-12 mt-6">
+          <LabelCaps className="mb-5">Organisational implications of the score profile</LabelCaps>
+          <p className="text-[13px] leading-relaxed mb-6 max-w-[80ch]" style={{ opacity: 0.5 }}>{oi.opening}</p>
+          <div className={`grid gap-6 ${oi.patterns.length <= 3 ? 'grid-cols-3' : 'grid-cols-2'}`}>
+            {oi.patterns.map((pattern, i) => (
+              <div
+                key={i}
+                className="p-8 flex flex-col gap-4"
+                style={{
+                  backgroundColor: '#111111',
+                  borderRadius: '24px',
+                  border: '1px solid rgba(245, 233, 200, 0.15)',
+                }}
+              >
+                <div>
+                  <p className="text-[11px] uppercase tracking-widest m-0 mb-1" style={{ opacity: 0.4 }}>
+                    {pattern.cluster_or_dimension_reference} · {pattern.score_value}
+                  </p>
+                  <p className="text-[15px] font-medium m-0">{pattern.pattern_name}</p>
+                </div>
+                <p className="text-[13px] leading-relaxed m-0" style={{ opacity: 0.65 }}>{pattern.organisational_implication}</p>
+              </div>
+            ))}
+          </div>
+          <p className="text-[13px] leading-relaxed mt-6 max-w-[80ch]" style={{ opacity: 0.5 }}>{oi.closing}</p>
+        </div>
+      )}
 
       {/* Cluster Scores */}
       <div className="col-span-12 mt-6">
